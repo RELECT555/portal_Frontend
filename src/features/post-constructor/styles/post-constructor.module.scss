@@ -1,0 +1,137 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.editorColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sidebarColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (max-width: 960px) {
+    order: -1;
+  }
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #fafbfc;
+  border-radius: 16px 16px 0 0;
+}
+
+.toolbarGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  &::after {
+    content: '';
+    width: 1px;
+    height: 24px;
+    background-color: #e2e8f0;
+    margin: 0 6px;
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+}
+
+.toolbarButton {
+  min-width: 32px !important;
+  width: 32px;
+  height: 32px;
+  padding: 4px !important;
+  border-radius: 6px !important;
+  color: #475569 !important;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: #f1f5f9 !important;
+    color: #1e293b !important;
+  }
+
+  &.active {
+    background-color: #0d9488 !important;
+    color: #ffffff !important;
+
+    &:hover {
+      background-color: #0f766e !important;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}
+
+.headingSelect {
+  min-width: 130px;
+
+  .MuiSelect-select {
+    padding: 4px 8px;
+    font-size: 0.8125rem;
+  }
+}
+
+.colorInput {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 2px;
+  }
+
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: 3px;
+  }
+}

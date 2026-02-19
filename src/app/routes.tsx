@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { CircularProgress, Box } from '@mui/material';
 import { ROUTES } from '@/lib/constants';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { NotFoundPage } from '@/components/shared';
 
 const HomePage = lazy(() => import('@/features/home/HomePage'));
 const CompanyPage = lazy(() => import('@/features/company/CompanyPage'));
@@ -16,6 +17,9 @@ const KnowledgeBasePage = lazy(() => import('@/features/knowledge-base/Knowledge
 const VacanciesPage = lazy(() => import('@/features/vacancies/VacanciesPage'));
 const GratitudePage = lazy(() => import('@/features/gratitude/GratitudePage'));
 const LibraryPage = lazy(() => import('@/features/library/LibraryPage'));
+const PostConstructorPage = lazy(
+  () => import('@/features/post-constructor/components/PostConstructorPage'),
+);
 
 const PageLoader: React.FC = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
@@ -23,23 +27,32 @@ const PageLoader: React.FC = () => (
   </Box>
 );
 
+function withSuspense(Component: React.LazyExoticComponent<React.ComponentType>): React.ReactNode {
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <Component />
+    </Suspense>
+  );
+}
+
 export const AppRoutes: React.FC = () => (
-  <Suspense fallback={<PageLoader />}>
-    <Routes>
-      <Route element={<MainLayout />}>
-        <Route path={ROUTES.HOME} element={<HomePage />} />
-        <Route path={ROUTES.COMPANY} element={<CompanyPage />} />
-        <Route path={ROUTES.COMPANY_SECTION} element={<CompanySectionPage />} />
-        <Route path={ROUTES.NEWS} element={<NewsPage />} />
-        <Route path={ROUTES.TEAM} element={<TeamPage />} />
-        <Route path={ROUTES.CULTURE} element={<CulturePage />} />
-        <Route path={ROUTES.LIVE} element={<LivePage />} />
-        <Route path={ROUTES.IDEAS} element={<IdeasPage />} />
-        <Route path={ROUTES.KNOWLEDGE_BASE} element={<KnowledgeBasePage />} />
-        <Route path={ROUTES.VACANCIES} element={<VacanciesPage />} />
-        <Route path={ROUTES.GRATITUDE} element={<GratitudePage />} />
-        <Route path={ROUTES.LIBRARY} element={<LibraryPage />} />
-      </Route>
-    </Routes>
-  </Suspense>
+  <Routes>
+    <Route element={<MainLayout />}>
+      <Route path={ROUTES.HOME} element={withSuspense(HomePage)} />
+      <Route path={ROUTES.COMPANY} element={withSuspense(CompanyPage)} />
+      <Route path={ROUTES.COMPANY_SECTION} element={withSuspense(CompanySectionPage)} />
+      <Route path={ROUTES.NEWS} element={withSuspense(NewsPage)} />
+      <Route path={ROUTES.TEAM} element={withSuspense(TeamPage)} />
+      <Route path={ROUTES.CULTURE} element={withSuspense(CulturePage)} />
+      <Route path={ROUTES.LIVE} element={withSuspense(LivePage)} />
+      <Route path={ROUTES.IDEAS} element={withSuspense(IdeasPage)} />
+      <Route path={ROUTES.KNOWLEDGE_BASE} element={withSuspense(KnowledgeBasePage)} />
+      <Route path={ROUTES.VACANCIES} element={withSuspense(VacanciesPage)} />
+      <Route path={ROUTES.GRATITUDE} element={withSuspense(GratitudePage)} />
+      <Route path={ROUTES.LIBRARY} element={withSuspense(LibraryPage)} />
+      <Route path={ROUTES.POST_CONSTRUCTOR} element={withSuspense(PostConstructorPage)} />
+      <Route path={ROUTES.POST_CONSTRUCTOR_EDIT} element={withSuspense(PostConstructorPage)} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Route>
+  </Routes>
 );

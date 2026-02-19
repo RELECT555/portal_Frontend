@@ -30,32 +30,44 @@ const HomePage: React.FC = () => {
 
   return (
     <div className={styles.dashboard}>
-      <section className={styles.topRow}>
+      <div className={styles.heroNews}>
         <MainNewsWidget news={MOCK_MAIN_NEWS} />
+      </div>
+      <div className={styles.newsList}>
         <NewsListWidget news={MOCK_NEWS} />
+      </div>
+      <div className={styles.calendar}>
         <CalendarWidget />
-      </section>
+      </div>
 
-      <PeopleCarousel
-        birthdays={MOCK_BIRTHDAYS}
-        newEmployees={MOCK_NEW_EMPLOYEES}
-        anniversaries={MOCK_ANNIVERSARIES}
-      />
-
-      <section className={styles.ideasLiveRow}>
+      <div className={styles.ideasBank}>
         <IdeasBankWidget />
+      </div>
+      <div className={styles.peopleCarousel}>
+        <PeopleCarousel
+          birthdays={MOCK_BIRTHDAYS}
+          newEmployees={MOCK_NEW_EMPLOYEES}
+          anniversaries={MOCK_ANNIVERSARIES}
+        />
+      </div>
+
+      <div className={styles.liveWidget}>
         <LiveWidget publications={liveSlice} />
-      </section>
-
-      <section className={styles.twoCol}>
-        <VacanciesWidget vacancies={MOCK_VACANCIES} />
+      </div>
+      <div className={styles.gratitudeWidget}>
         <GratitudeWidget entries={MOCK_GRATITUDE_FEED} />
-      </section>
+      </div>
 
-      <section className={styles.twoCol}>
+      <div className={styles.vacanciesWidget}>
+        <VacanciesWidget vacancies={MOCK_VACANCIES} />
+      </div>
+      <div className={styles.libraryWidget}>
         <LibraryWidget books={MOCK_BOOKS} />
+      </div>
+
+      <div className={styles.knowledgeBase}>
         <KnowledgeBaseWidget documents={MOCK_KB_DOCUMENTS} />
-      </section>
+      </div>
     </div>
   );
 };

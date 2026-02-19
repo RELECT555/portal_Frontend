@@ -3,12 +3,9 @@ import { Card, CardContent, Typography, Box, Divider } from '@mui/material';
 import { ThumbUpOutlined, ChatBubbleOutline } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
-import 'dayjs/locale/ru';
 import { ROUTES } from '@/lib/constants';
 import { SectionHeader } from '@/components/shared';
 import type { NewsItem } from '@/features/news/types';
-
-dayjs.locale('ru');
 
 interface Props {
   news: NewsItem[];
@@ -31,8 +28,12 @@ export const NewsListWidget: React.FC<Props> = React.memo(({ news }) => (
                 px: 1,
                 mx: -1,
                 borderRadius: 1,
-                transition: 'background 0.15s',
-                '&:hover': { background: 'rgba(0,0,0,0.02)' },
+                borderLeft: '2px solid transparent',
+                transition: 'background 0.15s, border-color 0.15s',
+                '&:hover': {
+                  background: 'rgba(0,0,0,0.02)',
+                  borderLeftColor: 'primary.main',
+                },
               }}
             >
               <Typography
@@ -51,7 +52,18 @@ export const NewsListWidget: React.FC<Props> = React.memo(({ news }) => (
                 {item.title}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <Typography variant="caption" color="primary.main" fontWeight={600}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    bgcolor: 'rgba(13, 148, 136, 0.06)',
+                    px: 0.75,
+                    py: 0.25,
+                    borderRadius: 1,
+                    fontSize: '0.65rem',
+                  }}
+                >
                   {dayjs(item.publishedAt).format('DD MMMM')}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -71,3 +83,5 @@ export const NewsListWidget: React.FC<Props> = React.memo(({ news }) => (
     </CardContent>
   </Card>
 ));
+
+NewsListWidget.displayName = 'NewsListWidget';

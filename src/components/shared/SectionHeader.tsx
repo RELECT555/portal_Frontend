@@ -13,30 +13,43 @@ interface Props {
 
 export const SectionHeader: React.FC<Props> = ({ title, titleNode, linkText, linkTo, action }) => (
   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-    {titleNode ?? (
-      <Typography variant="h4" component="h2" fontWeight={700}>
-        {title}
-      </Typography>
-    )}
-    {linkText && linkTo && (
-      <Typography
-        component={Link}
-        to={linkTo}
-        variant="caption"
-        color="primary"
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Box
         sx={{
-          fontWeight: 600,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0.5,
-          transition: 'gap 0.2s',
-          '&:hover': { gap: 1 },
+          width: 3,
+          height: 20,
+          borderRadius: 2,
+          bgcolor: 'primary.main',
+          flexShrink: 0,
         }}
-      >
-        {linkText}
-        <ArrowForward sx={{ fontSize: 14 }} />
-      </Typography>
-    )}
-    {action}
+      />
+      {titleNode ?? (
+        <Typography variant="h4" component="h2" fontWeight={700}>
+          {title}
+        </Typography>
+      )}
+    </Box>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      {action}
+      {linkText && linkTo && (
+        <Typography
+          component={Link}
+          to={linkTo}
+          variant="caption"
+          color="primary"
+          sx={{
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.5,
+            transition: 'gap 0.2s',
+            '&:hover': { gap: 1 },
+          }}
+        >
+          {linkText}
+          <ArrowForward sx={{ fontSize: 14 }} />
+        </Typography>
+      )}
+    </Box>
   </Box>
 );

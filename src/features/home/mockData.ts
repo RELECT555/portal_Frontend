@@ -13,7 +13,11 @@ export const MOCK_MAIN_NEWS: NewsItem = {
   publishedAt: '2026-02-19',
   likesCount: 2,
   commentsCount: 0,
+  viewsCount: 540,
   isMain: true,
+  authorName: 'HR-отдел',
+  category: 'events',
+  tags: ['премия', 'трансляция'],
 };
 
 export const MOCK_NEWS: NewsItem[] = [
@@ -24,6 +28,10 @@ export const MOCK_NEWS: NewsItem[] = [
     publishedAt: '2026-02-18',
     likesCount: 2,
     commentsCount: 0,
+    viewsCount: 320,
+    authorName: 'Администрация',
+    category: 'announcements',
+    tags: ['расписание'],
   },
   {
     id: '3',
@@ -32,6 +40,10 @@ export const MOCK_NEWS: NewsItem[] = [
     publishedAt: '2026-02-18',
     likesCount: 2,
     commentsCount: 0,
+    viewsCount: 890,
+    authorName: 'HR-отдел',
+    category: 'hr',
+    tags: ['ДМС', 'страхование'],
   },
   {
     id: '4',
@@ -40,6 +52,10 @@ export const MOCK_NEWS: NewsItem[] = [
     publishedAt: '2026-02-18',
     likesCount: 5,
     commentsCount: 0,
+    viewsCount: 1200,
+    authorName: 'Корп. культура',
+    category: 'events',
+    tags: ['премия'],
   },
   {
     id: '5',
@@ -48,6 +64,10 @@ export const MOCK_NEWS: NewsItem[] = [
     publishedAt: '2026-02-17',
     likesCount: 9,
     commentsCount: 0,
+    viewsCount: 2100,
+    authorName: 'HR-отдел',
+    category: 'events',
+    tags: ['премия', 'мероприятие'],
   },
 ];
 
@@ -92,6 +112,8 @@ export const MOCK_LIVE_PUBLICATIONS: LivePublication[] = [
     heartsCount: 3,
     viewsCount: 507,
     commentsCount: 45,
+    tags: ['розыгрыш', 'новый год'],
+    category: 'corporate',
   },
   {
     id: '2',
@@ -104,6 +126,8 @@ export const MOCK_LIVE_PUBLICATIONS: LivePublication[] = [
     heartsCount: 0,
     viewsCount: 204,
     commentsCount: 8,
+    tags: ['спорт', 'забег'],
+    category: 'sport',
   },
 ];
 

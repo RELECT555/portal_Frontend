@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
-import { Card, CardContent, Typography, Box, Avatar, Tabs, Tab } from '@mui/material';
+import React, { useCallback, useMemo } from 'react';
+import { Card, CardContent, Typography, Box, Avatar, Tabs, Tab, Chip } from '@mui/material';
 import { Cake, PersonAdd, EmojiEvents } from '@mui/icons-material';
+import { alpha } from '@mui/material/styles';
 import type { BirthdayPerson, NewEmployee, AnniversaryPerson } from '@/features/birthdays/types';
 
 interface Props {
@@ -40,7 +41,14 @@ const PersonCard: React.FC<PersonCardProps> = React.memo(({ fullName, subtitle, 
   >
     <Avatar
       src={avatarUrl}
-      sx={{ width: 44, height: 44, bgcolor: 'primary.main', fontSize: '0.85rem' }}
+      sx={{
+        width: 48,
+        height: 48,
+        bgcolor: 'primary.main',
+        fontSize: '0.9rem',
+        border: '2px solid',
+        borderColor: (theme) => alpha(theme.palette.primary.main, 0.15),
+      }}
     >
       {getInitials(fullName)}
     </Avatar>
@@ -55,12 +63,6 @@ const PersonCard: React.FC<PersonCardProps> = React.memo(({ fullName, subtitle, 
   </Box>
 ));
 
-const TAB_ICONS = [
-  <Cake key="cake" sx={{ fontSize: 18 }} />,
-  <PersonAdd key="person" sx={{ fontSize: 18 }} />,
-  <EmojiEvents key="trophy" sx={{ fontSize: 18 }} />,
-];
-
 export const PeopleCarousel: React.FC<Props> = React.memo(
   ({ birthdays, newEmployees, anniversaries }) => {
     const [activeTab, setActiveTab] = React.useState(0);
@@ -69,8 +71,21 @@ export const PeopleCarousel: React.FC<Props> = React.memo(
       setActiveTab(newValue);
     }, []);
 
+    const tabData = useMemo(
+      () => [
+        { icon: <Cake sx={{ fontSize: 16 }} />, label: 'Дни рождения', count: birthdays.length },
+        { icon: <PersonAdd sx={{ fontSize: 16 }} />, label: 'Новые', count: newEmployees.length },
+        {
+          icon: <EmojiEvents sx={{ fontSize: 16 }} />,
+          label: 'Юбилеи',
+          count: anniversaries.length,
+        },
+      ],
+      [birthdays.length, newEmployees.length, anniversaries.length],
+    );
+
     return (
-      <Card>
+      <Card sx={{ height: '100%' }}>
         <CardContent>
           <Tabs
             value={activeTab}
@@ -78,11 +93,52 @@ export const PeopleCarousel: React.FC<Props> = React.memo(
             variant="fullWidth"
             textColor="primary"
             indicatorColor="primary"
-            sx={{ mb: 2 }}
+            sx={{
+              mb: 2,
+              '& .MuiTab-root': {
+                minHeight: 44,
+                borderRadius: '10px',
+                mx: 0.5,
+                transition: 'background 0.15s',
+                '&:hover': {
+                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.04),
+                },
+              },
+              '& .MuiTabs-indicator': {
+                height: 3,
+                borderRadius: '3px 3px 0 0',
+              },
+            }}
           >
-            <Tab icon={TAB_ICONS[0]} iconPosition="start" label="Дни рождения" />
-            <Tab icon={TAB_ICONS[1]} iconPosition="start" label="Новые сотрудники" />
-            <Tab icon={TAB_ICONS[2]} iconPosition="start" label="Юбилеи" />
+            {tabData.map((tab, idx) => (
+              <Tab
+                key={idx}
+                icon={tab.icon}
+                iconPosition="start"
+                label={
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                    {tab.label}
+                    {tab.count > 0 && (
+                      <Chip
+                        label={tab.count}
+                        size="small"
+                        sx={{
+                          height: 18,
+                          minWidth: 18,
+                          fontSize: '0.65rem',
+                          fontWeight: 700,
+                          bgcolor: (theme) =>
+                            activeTab === idx
+                              ? alpha(theme.palette.primary.main, 0.1)
+                              : 'rgba(0,0,0,0.06)',
+                          color: activeTab === idx ? 'primary.main' : 'text.secondary',
+                        }}
+                      />
+                    )}
+                  </Box>
+                }
+              />
+            ))}
           </Tabs>
 
           {activeTab === 0 && (
@@ -158,3 +214,6 @@ export const PeopleCarousel: React.FC<Props> = React.memo(
     );
   },
 );
+
+PersonCard.displayName = 'PersonCard';
+PeopleCarousel.displayName = 'PeopleCarousel';

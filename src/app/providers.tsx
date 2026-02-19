@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { theme } from './theme';
 import { queryClient } from '@/lib/api/queryClient';
 import { logger } from '@/lib/logger';
+import { ErrorBoundary } from '@/components/shared';
 
 const MSAL_CLIENT_ID = import.meta.env.VITE_MSAL_CLIENT_ID;
 
@@ -45,12 +46,14 @@ export const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BrowserRouter>{children}</BrowserRouter>
-      </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <BrowserRouter>{children}</BrowserRouter>
+        </ThemeProvider>
+        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };

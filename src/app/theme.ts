@@ -41,7 +41,7 @@ export const theme = createTheme({
     body2: { fontSize: '0.8125rem', lineHeight: 1.5 },
     caption: { fontSize: '0.75rem', color: '#64748b', fontWeight: 500 },
   },
-  shape: { borderRadius: 12 },
+  shape: { borderRadius: 14 },
   shadows: [
     'none',
     '0 1px 2px 0 rgba(0,0,0,0.05)',
@@ -98,15 +98,14 @@ export const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 16,
+          borderRadius: 20,
           border: '1px solid',
           borderColor: alpha('#000', 0.06),
-          boxShadow: '0 1px 3px 0 rgba(0,0,0,0.04)',
-          transition: 'box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)',
+          transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
           overflow: 'hidden',
           '&:hover': {
-            boxShadow: '0 8px 24px -4px rgba(0,0,0,0.1)',
-            borderColor: alpha(PRIMARY, 0.15),
+            boxShadow: '0 12px 32px -8px rgba(0,0,0,0.1)',
           },
         },
       },

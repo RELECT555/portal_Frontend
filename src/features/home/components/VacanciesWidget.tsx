@@ -1,21 +1,19 @@
 import React from 'react';
 import { Card, CardContent, Typography, Box, Chip, Divider, Button } from '@mui/material';
 import { WorkOutline as WorkIcon, ArrowForward } from '@mui/icons-material';
+import { alpha } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
-import 'dayjs/locale/ru';
 import { SectionHeader } from '@/components/shared';
 import { ROUTES } from '@/lib/constants';
 import type { Vacancy } from '@/features/vacancies/types';
-
-dayjs.locale('ru');
 
 interface Props {
   vacancies: Vacancy[];
 }
 
 export const VacanciesWidget: React.FC<Props> = React.memo(({ vacancies }) => (
-  <Card>
+  <Card sx={{ borderLeft: (theme) => `3px solid ${theme.palette.primary.main}` }}>
     <CardContent>
       <SectionHeader
         title="Вакансии"
@@ -59,8 +57,8 @@ export const VacanciesWidget: React.FC<Props> = React.memo(({ vacancies }) => (
                   sx={{
                     width: 32,
                     height: 32,
-                    borderRadius: 1,
-                    bgcolor: 'primary.50',
+                    borderRadius: '10px',
+                    bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -107,3 +105,5 @@ export const VacanciesWidget: React.FC<Props> = React.memo(({ vacancies }) => (
     </CardContent>
   </Card>
 ));
+
+VacanciesWidget.displayName = 'VacanciesWidget';

@@ -15,6 +15,7 @@ $color-text-white: #ffffff;
 
 $color-border: #e2e8f0;
 $color-divider: #f1f5f9;
+$color-surface-subtle: #f1f5f9;
 
 $color-success: #10b981;
 $color-error: #ef4444;
@@ -37,11 +38,16 @@ $border-radius-sm: 4px;
 $border-radius-md: 8px;
 $border-radius-lg: 12px;
 $border-radius-xl: 16px;
+$border-radius-card: 20px;
 
 // Shadows
 $shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
 $shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
 $shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+$shadow-card:
+  0 1px 3px rgba(0, 0, 0, 0.04),
+  0 1px 2px rgba(0, 0, 0, 0.02);
+$shadow-card-hover: 0 12px 32px -8px rgba(0, 0, 0, 0.1);
 
 // Breakpoints (matching MUI defaults)
 $breakpoint-xs: 0;
@@ -53,4 +59,4 @@ $breakpoint-xl: 1536px;
 // Layout
 $header-height: 64px;
 $sidebar-width: 280px;
-$content-max-width: 1200px;
+$content-max-width: 1280px;

@@ -1,11 +1,9 @@
 import React from 'react';
-import { Card, CardMedia, CardContent, Typography, Box, Chip } from '@mui/material';
+import { Card, CardContent, Typography, Box, Chip } from '@mui/material';
 import { ThumbUpOutlined, ChatBubbleOutline } from '@mui/icons-material';
+import { alpha } from '@mui/material/styles';
 import dayjs from 'dayjs';
-import 'dayjs/locale/ru';
 import type { NewsItem } from '@/features/news/types';
-
-dayjs.locale('ru');
 
 interface Props {
   news: NewsItem | null;
@@ -18,32 +16,56 @@ export const MainNewsWidget: React.FC<Props> = React.memo(({ news }) => {
 
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <CardMedia
-        component="div"
+      <Box
         sx={{
-          height: 200,
-          background: 'linear-gradient(145deg, #f0fdfa 0%, #ccfbf1 50%, #99f6e4 100%)',
+          height: 220,
+          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.04),
           display: 'flex',
-          alignItems: 'flex-end',
-          p: 2.5,
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          p: 3,
           position: 'relative',
+          overflow: 'hidden',
         }}
       >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: -40,
+            right: -40,
+            width: 160,
+            height: 160,
+            borderRadius: '50%',
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.06),
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: -20,
+            right: 80,
+            width: 80,
+            height: 80,
+            borderRadius: '50%',
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.04),
+          }}
+        />
+        <Chip
+          label="Главная новость дня"
+          size="small"
+          variant="outlined"
+          color="primary"
+          sx={{ alignSelf: 'flex-start', mb: 1.5, fontWeight: 600, fontSize: '0.7rem' }}
+        />
         <Typography
-          variant="h3"
+          variant="h2"
           fontWeight={700}
           sx={{ position: 'relative', zIndex: 1, lineHeight: 1.3, color: 'text.primary' }}
         >
           {news.title}
         </Typography>
-      </CardMedia>
+      </Box>
       <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Chip
-          label="Главная новость дня"
-          size="small"
-          color="secondary"
-          sx={{ mb: 1.5, alignSelf: 'flex-start', fontWeight: 600, fontSize: '0.7rem' }}
-        />
         <Typography variant="body2" color="text.secondary" sx={{ mb: 'auto', pb: 1.5 }}>
           {news.content}
         </Typography>
@@ -73,3 +95,5 @@ export const MainNewsWidget: React.FC<Props> = React.memo(({ news }) => {
     </Card>
   );
 });
+
+MainNewsWidget.displayName = 'MainNewsWidget';

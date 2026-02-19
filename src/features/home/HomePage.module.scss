@@ -2,37 +2,71 @@
 @use '../../styles/mixins' as *;
 
 .dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-lg;
-}
-
-.topRow {
   display: grid;
   grid-template-columns: 1fr;
-  gap: $spacing-lg;
+  gap: 20px;
 
   @include respond-to(md) {
-    grid-template-columns: 1fr 1fr 200px;
+    grid-template-columns: repeat(12, 1fr);
   }
 }
 
-.twoCol {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: $spacing-lg;
-
+.heroNews {
   @include respond-to(md) {
-    grid-template-columns: 1fr 1fr;
+    grid-column: span 5;
   }
 }
 
-.ideasLiveRow {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: $spacing-lg;
-
+.newsList {
   @include respond-to(md) {
-    grid-template-columns: 280px 1fr;
+    grid-column: span 4;
+  }
+}
+
+.calendar {
+  @include respond-to(md) {
+    grid-column: span 3;
+  }
+}
+
+.ideasBank {
+  @include respond-to(md) {
+    grid-column: span 3;
+  }
+}
+
+.peopleCarousel {
+  @include respond-to(md) {
+    grid-column: span 9;
+  }
+}
+
+.liveWidget {
+  @include respond-to(md) {
+    grid-column: span 7;
+  }
+}
+
+.gratitudeWidget {
+  @include respond-to(md) {
+    grid-column: span 5;
+  }
+}
+
+.vacanciesWidget {
+  @include respond-to(md) {
+    grid-column: span 5;
+  }
+}
+
+.libraryWidget {
+  @include respond-to(md) {
+    grid-column: span 7;
+  }
+}
+
+.knowledgeBase {
+  @include respond-to(md) {
+    grid-column: span 12;
   }
 }

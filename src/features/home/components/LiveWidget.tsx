@@ -20,11 +20,6 @@ const pulse = keyframes`
   50% { opacity: 0.4; transform: scale(0.85); }
 `;
 
-const fadeUp = keyframes`
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
-
 const LiveDot: React.FC = () => (
   <Box
     sx={{
@@ -74,19 +69,13 @@ export const LiveWidget: React.FC<Props> = React.memo(({ publications }) => (
       }
     />
     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-      {publications.map((pub, index) => (
+      {publications.map((pub) => (
         <Card
           key={pub.id}
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            animation: `${fadeUp} 0.4s ease both`,
-            animationDelay: `${index * 0.08}s`,
-            transition: 'transform 0.2s, box-shadow 0.2s',
-            '&:hover': {
-              transform: 'translateY(-3px)',
-              boxShadow: 4,
-            },
+            transition: 'box-shadow 0.3s ease',
           }}
         >
           <CardMedia
@@ -107,7 +96,7 @@ export const LiveWidget: React.FC<Props> = React.memo(({ publications }) => (
                 position: 'absolute',
                 top: 10,
                 left: 10,
-                bgcolor: 'rgba(255,255,255,0.9)',
+                bgcolor: 'rgba(255,255,255,0.92)',
                 backdropFilter: 'blur(4px)',
                 fontWeight: 600,
                 fontSize: '0.65rem',
@@ -164,3 +153,5 @@ export const LiveWidget: React.FC<Props> = React.memo(({ publications }) => (
     </Box>
   </Box>
 ));
+
+LiveWidget.displayName = 'LiveWidget';

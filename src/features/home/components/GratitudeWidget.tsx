@@ -1,10 +1,9 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent, Typography, Box, Avatar, Button, Divider } from '@mui/material';
 import { FavoriteRounded, ArrowForward } from '@mui/icons-material';
 import { alpha } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/lib/constants';
-import { useNavigate } from 'react-router-dom';
 import type { GratitudeEntry } from '@/features/gratitude/types';
 
 const VISIBLE_COUNT = 7;
@@ -84,39 +83,35 @@ const EntryRow: React.FC<EntryRowProps> = React.memo(({ entry }) => (
 ));
 
 export const GratitudeWidget: React.FC<Props> = React.memo(({ entries }) => {
-  const navigate = useNavigate();
-  const handleClick = useCallback((): void => {
-    navigate(ROUTES.GRATITUDE);
-  }, [navigate]);
-
   const visible = useMemo(() => entries.slice(0, VISIBLE_COUNT), [entries]);
 
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Box
         sx={{
-          background: 'linear-gradient(135deg, #FFF5F5 0%, #FFF0F6 100%)',
           px: 2,
           py: 1.25,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Box
             sx={{
               width: 28,
               height: 28,
               borderRadius: '50%',
-              background: 'linear-gradient(135deg, #ef4444, #f97316)',
+              bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
             }}
           >
-            <FavoriteRounded sx={{ fontSize: 14, color: '#fff' }} />
+            <FavoriteRounded sx={{ fontSize: 14, color: 'error.main' }} />
           </Box>
           <Typography variant="h4" fontWeight={700} sx={{ fontSize: '0.95rem' }}>
             Благодарности
@@ -154,9 +149,11 @@ export const GratitudeWidget: React.FC<Props> = React.memo(({ entries }) => {
 
         <Box sx={{ mt: 'auto', pt: 1.5, borderTop: '1px solid', borderColor: 'divider' }}>
           <Button
+            component={Link}
+            to={ROUTES.GRATITUDE}
             fullWidth
-            variant="contained"
-            onClick={handleClick}
+            variant="outlined"
+            color="error"
             size="small"
             startIcon={<FavoriteRounded sx={{ fontSize: 14 }} />}
             endIcon={<ArrowForward sx={{ fontSize: 12 }} />}
@@ -164,11 +161,10 @@ export const GratitudeWidget: React.FC<Props> = React.memo(({ entries }) => {
               fontWeight: 600,
               fontSize: '0.8rem',
               py: 0.75,
-              background: 'linear-gradient(135deg, #ef4444, #f97316)',
-              color: '#fff',
+              borderWidth: 1.5,
               '&:hover': {
-                background: 'linear-gradient(135deg, #dc2626, #ea580c)',
-                boxShadow: '0 4px 14px rgba(239,68,68,0.3)',
+                borderWidth: 1.5,
+                bgcolor: (theme) => alpha(theme.palette.error.main, 0.04),
               },
             }}
           >
@@ -179,3 +175,6 @@ export const GratitudeWidget: React.FC<Props> = React.memo(({ entries }) => {
     </Card>
   );
 });
+
+EntryRow.displayName = 'EntryRow';
+GratitudeWidget.displayName = 'GratitudeWidget';

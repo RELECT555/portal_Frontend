@@ -7,46 +7,24 @@ import {
   Avatar,
   Button,
   TextField,
-  Divider,
-  Chip,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Grid,
+  IconButton,
+  Autocomplete,
 } from '@mui/material';
-import { FavoriteRounded, EmojiEvents, Send, FormatQuote } from '@mui/icons-material';
-import type { GratitudeTop, GratitudeEntry } from './types';
-
-// ── Mock data ──────────────────────────────────────────────────────────────────
-
-const MOCK_TOP: GratitudeTop[] = [
-  {
-    id: '1',
-    fullName: 'Ляхов Алексей Федорович',
-    position: 'Системный аналитик',
-    receivedCount: 34,
-  },
-  { id: '2', fullName: 'Битяй Елена Анатольевна', position: 'Специалист', receivedCount: 28 },
-  {
-    id: '3',
-    fullName: 'Костикова Дарья Евгеньевна',
-    position: 'Клиент-менеджер',
-    receivedCount: 21,
-  },
-  {
-    id: '4',
-    fullName: 'Назаров Николай Андреевич',
-    position: 'Системный администратор',
-    receivedCount: 17,
-  },
-  {
-    id: '5',
-    fullName: 'Тарасов Сергей Анатольевич',
-    position: 'Менеджер интернет-продаж',
-    receivedCount: 14,
-  },
-];
+import { alpha, keyframes } from '@mui/material/styles';
+import {
+  FavoriteRounded,
+  Send,
+  FormatQuote,
+  Close,
+  VolunteerActivism,
+  WorkspacePremium,
+  TrendingUp,
+} from '@mui/icons-material';
+import type { GratitudeEntry } from './types';
 
 const MOCK_FEED: GratitudeEntry[] = [
   {
@@ -91,10 +69,21 @@ const MOCK_FEED: GratitudeEntry[] = [
   },
 ];
 
-const MEDAL_COLORS = ['#FFD700', '#C0C0C0', '#CD7F32'];
 const TOTAL = 1168;
+const WEEKLY_COUNT = 42;
+const MONTHLY_COUNT = 187;
+const pulseHeart = keyframes`
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+`;
 
-// ── Helpers ────────────────────────────────────────────────────────────────────
+const MOCK_EMPLOYEE_NAMES = [
+  'Ляхов Алексей Федорович',
+  'Битяй Елена Анатольевна',
+  'Костикова Дарья Евгеньевна',
+  'Назаров Николай Андреевич',
+  'Тарасов Сергей Анатольевич',
+];
 
 function getInitials(name: string): string {
   return name
@@ -109,71 +98,54 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
 }
 
-// ── Sub-components ─────────────────────────────────────────────────────────────
+interface FeedCardProps {
+  entry: GratitudeEntry;
+}
 
-const TopCard: React.FC<{ person: GratitudeTop; rank: number }> = ({ person, rank }) => (
-  <Box
+const FeedCard: React.FC<FeedCardProps> = ({ entry }) => (
+  <Card
     sx={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: 1.5,
-      py: 1.25,
-      px: 1,
-      mx: -1,
-      borderRadius: 1.5,
-      transition: 'background 0.15s',
-      cursor: 'pointer',
-      '&:hover': { background: 'rgba(0,0,0,0.03)' },
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      position: 'relative',
+      overflow: 'visible',
+      '&:hover': {
+        transform: 'translateY(-4px)',
+        boxShadow: (theme) => `0 16px 40px -12px ${alpha(theme.palette.error.main, 0.2)}`,
+        borderColor: (theme) => alpha(theme.palette.error.main, 0.2),
+      },
     }}
   >
-    <Typography
-      fontWeight={800}
-      sx={{ minWidth: 22, color: MEDAL_COLORS[rank - 1] ?? 'text.disabled', fontSize: '1rem' }}
-    >
-      {rank}
-    </Typography>
-    <Avatar
-      sx={{ width: 40, height: 40, bgcolor: 'primary.light', fontSize: '0.8rem', flexShrink: 0 }}
-    >
-      {getInitials(person.fullName)}
-    </Avatar>
-    <Box sx={{ minWidth: 0, flex: 1 }}>
-      <Typography variant="body2" fontWeight={600} noWrap>
-        {person.fullName}
-      </Typography>
-      <Typography variant="caption" color="text.secondary" noWrap>
-        {person.position}
-      </Typography>
-    </Box>
-    {person.receivedCount !== undefined && (
-      <Chip
-        label={person.receivedCount}
-        size="small"
-        icon={
-          <FavoriteRounded sx={{ fontSize: '12px !important', color: 'error.main !important' }} />
-        }
-        sx={{
-          fontWeight: 700,
-          fontSize: '0.7rem',
-          bgcolor: 'transparent',
-          border: '1px solid',
-          borderColor: 'error.light',
-          color: 'error.main',
-        }}
-      />
-    )}
-  </Box>
-);
+    <Box
+      sx={{
+        position: 'absolute',
+        top: -1,
+        left: 24,
+        right: 24,
+        height: 3,
+        borderRadius: '0 0 4px 4px',
+        background: (theme) =>
+          `linear-gradient(90deg, ${alpha(theme.palette.error.light, 0.4)}, ${alpha(theme.palette.error.main, 0.6)}, ${alpha(theme.palette.error.light, 0.4)})`,
+      }}
+    />
 
-const FeedCard: React.FC<{ entry: GratitudeEntry }> = ({ entry }) => (
-  <Card variant="outlined" sx={{ transition: 'box-shadow 0.2s', '&:hover': { boxShadow: 2 } }}>
-    <CardContent>
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-        <Avatar
-          sx={{ width: 38, height: 38, bgcolor: 'error.light', fontSize: '0.75rem', flexShrink: 0 }}
-        >
-          {getInitials(entry.toName)}
-        </Avatar>
+    <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box sx={{ pt: 0.5 }}>
+          <Avatar
+            sx={{
+              width: 48,
+              height: 48,
+              bgcolor: (theme) => alpha(theme.palette.error.main, 0.1),
+              color: 'error.main',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              flexShrink: 0,
+            }}
+          >
+            {getInitials(entry.fromName)}
+          </Avatar>
+        </Box>
+
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Box
             sx={{
@@ -181,135 +153,331 @@ const FeedCard: React.FC<{ entry: GratitudeEntry }> = ({ entry }) => (
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: 1,
-              mb: 0.25,
+              mb: 0.5,
             }}
           >
-            <Typography variant="body2" fontWeight={700} noWrap>
-              {entry.toName}
+            <Typography variant="body2" fontWeight={700}>
+              {entry.fromName}
             </Typography>
-            <Typography variant="caption" color="text.disabled" sx={{ flexShrink: 0 }}>
+            <Typography
+              variant="caption"
+              color="text.disabled"
+              sx={{ flexShrink: 0, fontSize: '0.7rem' }}
+            >
               {formatDate(entry.createdAt)}
             </Typography>
           </Box>
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-            {entry.toPosition}
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'flex-start' }}>
-            <FormatQuote sx={{ fontSize: 18, color: 'error.light', mt: 0.25, flexShrink: 0 }} />
-            <Typography variant="body2" color="text.primary" sx={{ lineHeight: 1.6 }}>
+
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              alignItems: 'flex-start',
+              bgcolor: (theme) => alpha(theme.palette.error.main, 0.03),
+              borderRadius: 3,
+              p: 2,
+              position: 'relative',
+            }}
+          >
+            <FormatQuote
+              sx={{
+                fontSize: 32,
+                color: (theme) => alpha(theme.palette.error.main, 0.15),
+                position: 'absolute',
+                top: 4,
+                left: 8,
+                transform: 'rotate(180deg)',
+              }}
+            />
+            <Typography
+              variant="body2"
+              color="text.primary"
+              sx={{ lineHeight: 1.7, pl: 3, fontStyle: 'italic' }}
+            >
               {entry.message}
             </Typography>
           </Box>
-          <Typography variant="caption" color="text.disabled" sx={{ mt: 1, display: 'block' }}>
-            от {entry.fromName}
-          </Typography>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mt: 1.5 }}>
+            <VolunteerActivism sx={{ fontSize: 14, color: 'error.light' }} />
+            <Typography variant="caption" color="text.secondary" fontWeight={500}>
+              для {entry.toName}
+            </Typography>
+            <Typography variant="caption" color="text.disabled">
+              · {entry.toPosition}
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </CardContent>
   </Card>
 );
 
-// ── Page ───────────────────────────────────────────────────────────────────────
+interface StatBoxProps {
+  icon: React.ReactNode;
+  value: string | number;
+  label: string;
+  color: string;
+}
+
+const StatBox: React.FC<StatBoxProps> = ({ icon, value, label, color }) => (
+  <Box
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 2,
+      px: 3,
+      py: 2,
+      borderRadius: 3,
+      bgcolor: (theme) => alpha(theme.palette[color as 'error' | 'warning' | 'success'].main, 0.06),
+      flex: 1,
+      minWidth: 160,
+      transition: 'all 0.2s',
+      '&:hover': {
+        bgcolor: (theme) =>
+          alpha(theme.palette[color as 'error' | 'warning' | 'success'].main, 0.1),
+        transform: 'translateY(-2px)',
+      },
+    }}
+  >
+    <Box
+      sx={{
+        width: 44,
+        height: 44,
+        borderRadius: '50%',
+        bgcolor: (theme) =>
+          alpha(theme.palette[color as 'error' | 'warning' | 'success'].main, 0.12),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+      }}
+    >
+      {icon}
+    </Box>
+    <Box>
+      <Typography variant="h3" fontWeight={800} color={`${color}.main`} sx={{ lineHeight: 1 }}>
+        {typeof value === 'number' ? value.toLocaleString('ru-RU') : value}
+      </Typography>
+      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.25, display: 'block' }}>
+        {label}
+      </Typography>
+    </Box>
+  </Box>
+);
 
 const GratitudePage: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
     <Box>
-      {/* Page header */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <FavoriteRounded sx={{ fontSize: 28, color: 'error.main' }} />
-          <Typography variant="h2" fontWeight={700}>
-            Благодарности
-          </Typography>
-        </Box>
-        <Button
-          variant="contained"
-          color="error"
-          startIcon={<FavoriteRounded sx={{ fontSize: 16 }} />}
-          onClick={() => setDialogOpen(true)}
-          sx={{ fontWeight: 600 }}
+      <Box
+        sx={{
+          background: (theme) =>
+            `linear-gradient(135deg, ${alpha(theme.palette.error.main, 0.04)} 0%, ${alpha(theme.palette.warning.main, 0.04)} 50%, ${alpha(theme.palette.error.light, 0.02)} 100%)`,
+          borderRadius: 5,
+          p: { xs: 2.5, md: 4 },
+          mb: 3,
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            mb: 3,
+            flexWrap: 'wrap',
+            gap: 2,
+          }}
         >
-          Сказать «спасибо»
-        </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Box
+              sx={{
+                width: 48,
+                height: 48,
+                borderRadius: '50%',
+                background: (theme) =>
+                  `linear-gradient(135deg, ${theme.palette.error.light}, ${theme.palette.error.main})`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: (theme) => `0 4px 16px ${alpha(theme.palette.error.main, 0.3)}`,
+              }}
+            >
+              <FavoriteRounded
+                sx={{
+                  fontSize: 24,
+                  color: '#fff',
+                  animation: `${pulseHeart} 2s ease-in-out infinite`,
+                }}
+              />
+            </Box>
+            <Box>
+              <Typography variant="h2" fontWeight={800}>
+                Благодарности
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Говори «спасибо» коллегам за их вклад
+              </Typography>
+            </Box>
+          </Box>
+
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<VolunteerActivism sx={{ fontSize: 18 }} />}
+            onClick={() => setDialogOpen(true)}
+            sx={{
+              fontWeight: 700,
+              px: 3,
+              py: 1.25,
+              borderRadius: 3,
+              background: (theme) =>
+                `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`,
+              boxShadow: (theme) => `0 4px 20px ${alpha(theme.palette.error.main, 0.35)}`,
+              '&:hover': {
+                boxShadow: (theme) => `0 6px 24px ${alpha(theme.palette.error.main, 0.45)}`,
+                transform: 'translateY(-2px)',
+              },
+            }}
+          >
+            Сказать «спасибо»
+          </Button>
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            flexWrap: 'wrap',
+          }}
+        >
+          <StatBox
+            icon={<FavoriteRounded sx={{ fontSize: 22, color: 'error.main' }} />}
+            value={TOTAL}
+            label="всего «спасибо»"
+            color="error"
+          />
+          <StatBox
+            icon={<TrendingUp sx={{ fontSize: 22, color: 'success.main' }} />}
+            value={WEEKLY_COUNT}
+            label="на этой неделе"
+            color="success"
+          />
+          <StatBox
+            icon={<WorkspacePremium sx={{ fontSize: 22, color: 'warning.main' }} />}
+            value={MONTHLY_COUNT}
+            label="за месяц"
+            color="warning"
+          />
+        </Box>
       </Box>
 
-      {/* Stats bar */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent sx={{ py: '12px !important' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.75 }}>
-              <Typography variant="h2" color="error.main" fontWeight={800} sx={{ lineHeight: 1 }}>
-                {TOTAL.toLocaleString('ru-RU')}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                «спасибо» сказано всего
-              </Typography>
-            </Box>
-            <Divider orientation="vertical" flexItem />
-            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.75 }}>
-              <Typography variant="h4" fontWeight={700}>
-                {MOCK_FEED.length}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                на этой неделе
-              </Typography>
-            </Box>
-          </Box>
-        </CardContent>
-      </Card>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+        <FormatQuote
+          sx={{
+            fontSize: 28,
+            color: (theme) => alpha(theme.palette.error.main, 0.3),
+            transform: 'rotate(180deg)',
+          }}
+        />
+        <Typography variant="h4" fontWeight={800}>
+          Лента благодарностей
+        </Typography>
+      </Box>
 
-      <Grid container spacing={3}>
-        {/* Left: Top */}
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card sx={{ position: 'sticky', top: 16 }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 1.5 }}>
-                <EmojiEvents sx={{ fontSize: 18, color: 'warning.main' }} />
-                <Typography variant="h4" fontWeight={700}>
-                  Топ недели
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                {MOCK_TOP.map((person, idx) => (
-                  <React.Fragment key={person.id}>
-                    <TopCard person={person} rank={idx + 1} />
-                    {idx < MOCK_TOP.length - 1 && <Divider sx={{ opacity: 0.4 }} />}
-                  </React.Fragment>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+        {MOCK_FEED.map((entry) => (
+          <FeedCard key={entry.id} entry={entry} />
+        ))}
+      </Box>
 
-        {/* Right: Feed */}
-        <Grid size={{ xs: 12, md: 8 }}>
-          <Typography variant="h4" fontWeight={700} sx={{ mb: 2 }}>
-            Лента благодарностей
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {MOCK_FEED.map((entry) => (
-              <FeedCard key={entry.id} entry={entry} />
-            ))}
-          </Box>
-        </Grid>
-      </Grid>
-
-      {/* Say thanks dialog */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <FavoriteRounded sx={{ color: 'error.main', fontSize: 20 }} />
-          Сказать «спасибо»
-        </DialogTitle>
-        <DialogContent
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '12px !important' }}
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 4,
+            overflow: 'hidden',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            height: 4,
+            background: (theme) =>
+              `linear-gradient(90deg, ${theme.palette.error.light}, ${theme.palette.error.main}, ${theme.palette.error.light})`,
+          }}
+        />
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            pb: 0,
+          }}
         >
-          <TextField
-            label="Кому"
-            placeholder="Начните вводить имя сотрудника"
-            fullWidth
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
+                background: (theme) =>
+                  `linear-gradient(135deg, ${alpha(theme.palette.error.main, 0.1)}, ${alpha(theme.palette.error.main, 0.2)})`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <VolunteerActivism sx={{ color: 'error.main', fontSize: 20 }} />
+            </Box>
+            <Box>
+              <Typography variant="h4" fontWeight={700}>
+                Сказать «спасибо»
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Выразите благодарность коллеге
+              </Typography>
+            </Box>
+          </Box>
+          <IconButton
+            onClick={() => setDialogOpen(false)}
             size="small"
+            sx={{ color: 'text.secondary' }}
+          >
+            <Close fontSize="small" />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent
+          sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, pt: '20px !important' }}
+        >
+          <Autocomplete
+            options={MOCK_EMPLOYEE_NAMES}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Кому"
+                placeholder="Начните вводить имя сотрудника"
+                fullWidth
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused': {
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'error.main',
+                      },
+                    },
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: 'error.main',
+                  },
+                }}
+              />
+            )}
+            freeSolo
           />
           <TextField
             label="Сообщение"
@@ -317,11 +485,23 @@ const GratitudePage: React.FC = () => {
             fullWidth
             multiline
             rows={4}
-            size="small"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused': {
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'error.main',
+                  },
+                },
+              },
+              '& .MuiInputLabel-root.Mui-focused': {
+                color: 'error.main',
+              },
+            }}
           />
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setDialogOpen(false)} color="inherit">
+
+        <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
+          <Button onClick={() => setDialogOpen(false)} color="inherit" sx={{ borderRadius: 2.5 }}>
             Отмена
           </Button>
           <Button
@@ -329,7 +509,17 @@ const GratitudePage: React.FC = () => {
             color="error"
             endIcon={<Send sx={{ fontSize: 16 }} />}
             onClick={() => setDialogOpen(false)}
-            sx={{ fontWeight: 600 }}
+            sx={{
+              fontWeight: 700,
+              borderRadius: 2.5,
+              px: 3,
+              background: (theme) =>
+                `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`,
+              boxShadow: (theme) => `0 4px 14px ${alpha(theme.palette.error.main, 0.35)}`,
+              '&:hover': {
+                boxShadow: (theme) => `0 6px 20px ${alpha(theme.palette.error.main, 0.45)}`,
+              },
+            }}
           >
             Отправить
           </Button>

@@ -12,9 +12,9 @@
   max-width: $content-max-width;
   width: 100%;
   margin: 0 auto;
-  padding: $spacing-xl $spacing-lg $spacing-xxl;
+  padding: $spacing-lg $spacing-lg $spacing-xxl;
 
   @media (max-width: 599px) {
-    padding: $spacing-lg $spacing-md;
+    padding: $spacing-md $spacing-md $spacing-lg;
   }
 }

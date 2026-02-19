@@ -9,7 +9,7 @@ interface Props {
   books: Book[];
 }
 
-const BOOK_COLORS = ['#f0fdfa', '#fef3c7', '#e0e7ff', '#fce7f3'];
+const BOOK_COLORS = ['#f1f5f9', '#e2e8f0', '#f8fafc', '#eef2f7'];
 
 export const LibraryWidget: React.FC<Props> = React.memo(({ books }) => (
   <Card>
@@ -27,7 +27,7 @@ export const LibraryWidget: React.FC<Props> = React.memo(({ books }) => (
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
             gap: 2,
           }}
         >
@@ -80,3 +80,5 @@ export const LibraryWidget: React.FC<Props> = React.memo(({ books }) => (
     </CardContent>
   </Card>
 ));
+
+LibraryWidget.displayName = 'LibraryWidget';
