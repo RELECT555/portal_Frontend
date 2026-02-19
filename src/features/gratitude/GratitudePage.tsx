@@ -7,11 +7,6 @@ import {
   Avatar,
   Button,
   TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  IconButton,
   Autocomplete,
 } from '@mui/material';
 import { alpha, keyframes } from '@mui/material/styles';
@@ -25,6 +20,7 @@ import {
   TrendingUp,
 } from '@mui/icons-material';
 import type { GratitudeEntry } from './types';
+import styles from './GratitudePage.module.scss';
 
 const MOCK_FEED: GratitudeEntry[] = [
   {
@@ -392,139 +388,81 @@ const GratitudePage: React.FC = () => {
         ))}
       </Box>
 
-      <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: 4,
-            overflow: 'hidden',
-          },
-        }}
-      >
-        <Box
-          sx={{
-            height: 4,
-            background: (theme) =>
-              `linear-gradient(90deg, ${theme.palette.error.light}, ${theme.palette.error.main}, ${theme.palette.error.light})`,
-          }}
-        />
-        <DialogTitle
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            pb: 0,
+      {dialogOpen && (
+        <div
+          className={styles.modalOverlay}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setDialogOpen(false);
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Box
-              sx={{
-                width: 40,
-                height: 40,
-                borderRadius: '50%',
-                background: (theme) =>
-                  `linear-gradient(135deg, ${alpha(theme.palette.error.main, 0.1)}, ${alpha(theme.palette.error.main, 0.2)})`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <VolunteerActivism sx={{ color: 'error.main', fontSize: 20 }} />
-            </Box>
-            <Box>
-              <Typography variant="h4" fontWeight={700}>
-                Сказать «спасибо»
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Выразите благодарность коллеге
-              </Typography>
-            </Box>
-          </Box>
-          <IconButton
-            onClick={() => setDialogOpen(false)}
-            size="small"
-            sx={{ color: 'text.secondary' }}
-          >
-            <Close fontSize="small" />
-          </IconButton>
-        </DialogTitle>
+          <div className={styles.modalPanel}>
+            <div className={styles.modalAccent} />
 
-        <DialogContent
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, pt: '20px !important' }}
-        >
-          <Autocomplete
-            options={MOCK_EMPLOYEE_NAMES}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Кому"
-                placeholder="Начните вводить имя сотрудника"
-                fullWidth
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&.Mui-focused': {
-                      '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'error.main',
+            <div className={styles.modalHeader}>
+              <div className={styles.modalHeaderLeft}>
+                <div className={styles.modalIcon}>
+                  <VolunteerActivism sx={{ color: '#ef4444', fontSize: 20 }} />
+                </div>
+                <div>
+                  <p className={styles.modalTitle}>Сказать «спасибо»</p>
+                  <p className={styles.modalSubtitle}>Выразите благодарность коллеге</p>
+                </div>
+              </div>
+              <button
+                className={styles.modalClose}
+                onClick={() => setDialogOpen(false)}
+                aria-label="Закрыть"
+              >
+                <Close sx={{ fontSize: 16 }} />
+              </button>
+            </div>
+
+            <div className={styles.modalBody}>
+              <Autocomplete
+                options={MOCK_EMPLOYEE_NAMES}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Кому"
+                    placeholder="Начните вводить имя сотрудника"
+                    fullWidth
+                    sx={{
+                      '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#ef4444',
                       },
-                    },
+                      '& .MuiInputLabel-root.Mui-focused': { color: '#ef4444' },
+                    }}
+                  />
+                )}
+                freeSolo
+              />
+              <TextField
+                label="Сообщение"
+                placeholder="Напишите, за что вы благодарны..."
+                fullWidth
+                multiline
+                rows={4}
+                sx={{
+                  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#ef4444',
                   },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'error.main',
-                  },
+                  '& .MuiInputLabel-root.Mui-focused': { color: '#ef4444' },
                 }}
               />
-            )}
-            freeSolo
-          />
-          <TextField
-            label="Сообщение"
-            placeholder="Напишите, за что вы благодарны..."
-            fullWidth
-            multiline
-            rows={4}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '&.Mui-focused': {
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'error.main',
-                  },
-                },
-              },
-              '& .MuiInputLabel-root.Mui-focused': {
-                color: 'error.main',
-              },
-            }}
-          />
-        </DialogContent>
+            </div>
 
-        <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
-          <Button onClick={() => setDialogOpen(false)} color="inherit" sx={{ borderRadius: 2.5 }}>
-            Отмена
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            endIcon={<Send sx={{ fontSize: 16 }} />}
-            onClick={() => setDialogOpen(false)}
-            sx={{
-              fontWeight: 700,
-              borderRadius: 2.5,
-              px: 3,
-              background: (theme) =>
-                `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`,
-              boxShadow: (theme) => `0 4px 14px ${alpha(theme.palette.error.main, 0.35)}`,
-              '&:hover': {
-                boxShadow: (theme) => `0 6px 20px ${alpha(theme.palette.error.main, 0.45)}`,
-              },
-            }}
-          >
-            Отправить
-          </Button>
-        </DialogActions>
-      </Dialog>
+            <div className={styles.modalFooter}>
+              <button className={styles.modalCancelBtn} onClick={() => setDialogOpen(false)}>
+                Отмена
+              </button>
+              <button className={styles.modalSubmitBtn} onClick={() => setDialogOpen(false)}>
+                Отправить
+                <Send className={styles.modalSubmitIcon} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Box>
   );
 };

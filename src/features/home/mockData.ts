@@ -3,8 +3,15 @@ import type { BirthdayPerson, NewEmployee, AnniversaryPerson } from '@/features/
 import type { LivePublication } from '@/features/live/types';
 import type { GratitudeEntry } from '@/features/gratitude/types';
 import type { Vacancy } from '@/features/vacancies/types';
-import type { Book } from '@/features/library/types';
 import type { KnowledgeBaseDocument } from '@/features/knowledge-base/types';
+
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  isAvailable: boolean;
+  coverUrl?: string;
+}
 
 export const MOCK_MAIN_NEWS: NewsItem = {
   id: '1',

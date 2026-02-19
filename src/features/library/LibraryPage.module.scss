@@ -96,100 +96,275 @@
   min-width: 8px;
 }
 
-.segmentedControl {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.05);
+// ── Filter dropdown button — header nav style ──────
+.filterDropdownWrap {
+  position: relative;
 }
 
-.segmentedItem {
+.filterBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+  white-space: nowrap;
+  border: 1px solid rgba($color-border, 0.5);
+  background: rgba($color-surface-subtle, 0.5);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  user-select: none;
+  line-height: 1.1;
+  font-family: inherit;
+
+  &:hover {
+    color: $color-text-primary;
+    background: rgba($color-surface-subtle, 0.85);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &Active {
+    color: $color-primary;
+    font-weight: 600;
+    background: rgba($color-primary, 0.07);
+    border-color: rgba($color-primary, 0.18);
+    box-shadow:
+      0 1px 3px rgba($color-primary, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+    &:hover {
+      background: rgba($color-primary, 0.1);
+      border-color: rgba($color-primary, 0.25);
+      box-shadow:
+        0 2px 8px rgba($color-primary, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+  }
+}
+
+.filterBtnIcon {
+  font-size: 15px !important;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.filterBtnIconOpen {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.filterDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $color-primary;
+  margin-left: -2px;
+  flex-shrink: 0;
+}
+
+.filterDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  padding: 6px;
+  background: rgba($color-bg-card, 0.97);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid rgba($color-border, 0.5);
+  border-radius: $border-radius-lg;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  z-index: 200;
+  animation: filterDropdownIn 0.15s ease;
+}
+
+@keyframes filterDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filterSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.filterSectionLabel {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $color-text-secondary;
+  padding: 6px 10px 4px;
+  opacity: 0.6;
+}
+
+.filterDropdownItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: $border-radius-md;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: $color-text-secondary;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+  font-family: inherit;
+
+  &:hover {
+    color: $color-text-primary;
+    background: rgba($color-surface-subtle, 0.8);
+  }
+
+  &Active {
+    color: $color-primary;
+    font-weight: 600;
+    background: rgba($color-primary, 0.06);
+
+    &:hover {
+      background: rgba($color-primary, 0.1);
+      color: $color-primary;
+    }
+  }
+}
+
+.filterDropdownItemLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filterDropdownCount {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: $color-text-secondary;
+  opacity: 0.6;
+}
+
+.filterDropdownCheck {
+  font-size: 14px !important;
+  color: $color-primary;
+  flex-shrink: 0;
+}
+
+.filterDivider {
+  height: 1px;
+  background: rgba($color-border, 0.4);
+  margin: 4px 0;
+}
+
+.filterResetBtn {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: $border-radius-md;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: $color-text-secondary;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+  font-family: inherit;
+
+  &:hover {
+    color: $color-error;
+    background: rgba($color-error, 0.05);
+  }
+}
+
+.activeCategoryPill {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 4px 10px 4px 12px;
+  border-radius: 20px;
   font-size: 0.75rem;
-  font-weight: 500;
-  color: $color-text-secondary;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  border: none;
-  background: transparent;
-  user-select: none;
-  line-height: 1.1;
-
-  &:hover {
-    color: $color-text-primary;
-  }
-
-  &Active {
-    background: $color-bg-card;
-    color: $color-primary;
-    font-weight: 600;
-    box-shadow:
-      0 1px 4px rgba(0, 0, 0, 0.08),
-      0 0 0 0.5px rgba($color-primary, 0.1),
-      0 0 8px rgba($color-primary, 0.06);
-  }
-}
-
-.segmentedCount {
-  font-size: 0.5625rem;
   font-weight: 600;
-  min-width: 14px;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.3);
-  padding: 0 3px;
-  line-height: 1.2;
+  color: $color-primary;
+  background: rgba($color-primary, 0.07);
+  border: 1px solid rgba($color-primary, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  animation: pillIn 0.15s ease;
+}
 
-  &Active {
-    color: $color-primary;
+@keyframes pillIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-.sortGroup {
+.activeCategoryClose {
   display: inline-flex;
   align-items: center;
-  padding: 2px;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.04);
-}
-
-.sortPill {
-  padding: 5px 11px;
-  border-radius: 6px;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: $color-text-secondary;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  line-height: 1.1;
+  color: $color-primary;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+  font-family: inherit;
 
   &:hover {
-    color: $color-text-primary;
-  }
-
-  &Active {
-    background: $color-bg-card;
-    color: $color-text-primary;
-    font-weight: 600;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    opacity: 1;
   }
 }
 
 .searchField {
-  width: 200px;
+  width: 220px;
   flex-shrink: 0;
 
   @media (max-width: $breakpoint-sm) {
     width: 100%;
-    order: -1;
   }
 }
 

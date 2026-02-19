@@ -3,7 +3,7 @@ import { Card, CardContent, Typography, Box } from '@mui/material';
 import { AutoStories as BookIcon } from '@mui/icons-material';
 import { SectionHeader } from '@/components/shared';
 import { ROUTES } from '@/lib/constants';
-import type { Book } from '@/features/library/types';
+import type { Book } from '@/features/home/mockData';
 
 interface Props {
   books: Book[];

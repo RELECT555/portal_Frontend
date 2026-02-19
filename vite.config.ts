@@ -47,7 +47,6 @@ export default defineConfig({
           tiptap: [
             '@tiptap/starter-kit',
             '@tiptap/react',
-            '@tiptap/pm',
             '@tiptap/extension-image',
             '@tiptap/extension-link',
             '@tiptap/extension-underline',
