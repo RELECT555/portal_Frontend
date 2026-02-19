@@ -1,0 +1,56 @@
+// Corporate palette — light, airy, teal accent
+$color-primary: #0d9488;
+$color-primary-dark: #0f766e;
+$color-primary-light: #14b8a6;
+$color-secondary: #f59e0b;
+$color-secondary-dark: #d97706;
+
+$color-bg-main: #f8fafb;
+$color-bg-card: #ffffff;
+$color-bg-header: #ffffff;
+
+$color-text-primary: #1e293b;
+$color-text-secondary: #64748b;
+$color-text-white: #ffffff;
+
+$color-border: #e2e8f0;
+$color-divider: #f1f5f9;
+
+$color-success: #10b981;
+$color-error: #ef4444;
+$color-warning: #f59e0b;
+$color-info: #6366f1;
+
+// Typography
+$font-family: 'Inter', 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-xxl: 48px;
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
+
+// Shadows
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+$shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+// Breakpoints (matching MUI defaults)
+$breakpoint-xs: 0;
+$breakpoint-sm: 600px;
+$breakpoint-md: 900px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1536px;
+
+// Layout
+$header-height: 64px;
+$sidebar-width: 280px;
+$content-max-width: 1200px;

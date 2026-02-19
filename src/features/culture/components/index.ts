@@ -1,0 +1,1 @@
+export { CultureCardComponent } from './CultureCard';

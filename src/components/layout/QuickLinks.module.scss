@@ -1,0 +1,44 @@
+@use '../../styles/variables' as *;
+
+.quickLinks {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px $spacing-lg;
+  background: $color-bg-card;
+  border-bottom: 1px solid $color-border;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: $color-text-secondary;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: rgba(27, 94, 59, 0.06);
+    color: $color-primary;
+    border-color: rgba(27, 94, 59, 0.15);
+  }
+}
+
+.linkLabel {
+  display: none;
+
+  @media (min-width: 600px) {
+    display: inline;
+  }
+}

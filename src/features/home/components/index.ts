@@ -1,0 +1,11 @@
+export { MainNewsWidget } from './MainNewsWidget';
+export { NewsListWidget } from './NewsListWidget';
+export { CalendarWidget } from './CalendarWidget';
+export { PeopleCarousel } from './PeopleCarousel';
+export { SearchWidget } from './SearchWidget';
+export { IdeasBankWidget } from './IdeasBankWidget';
+export { LiveWidget } from './LiveWidget';
+export { VacanciesWidget } from './VacanciesWidget';
+export { GratitudeWidget } from './GratitudeWidget';
+export { LibraryWidget } from './LibraryWidget';
+export { KnowledgeBaseWidget } from './KnowledgeBaseWidget';

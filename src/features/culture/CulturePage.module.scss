@@ -1,0 +1,74 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  padding-bottom: $spacing-xxl;
+}
+
+.pageHeader {
+  margin-bottom: $spacing-lg;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-md;
+}
+
+.authorRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.authorName {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: $color-text-primary;
+}
+
+.authorPosition {
+  font-size: 0.8125rem;
+  color: $color-text-secondary;
+}
+
+.section {
+  margin-bottom: $spacing-xl;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-lg;
+  padding-bottom: $spacing-sm;
+  border-bottom: 2px solid $color-primary;
+  display: inline-block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-lg;
+
+  @media (max-width: 1199px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 899px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-md;
+  }
+
+  @media (max-width: 599px) {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+}

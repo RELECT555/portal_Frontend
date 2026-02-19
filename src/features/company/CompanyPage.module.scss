@@ -1,0 +1,49 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  padding-bottom: $spacing-xxl;
+}
+
+.header {
+  margin-bottom: $spacing-xl;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-sm;
+}
+
+.subtitle {
+  font-size: 0.9375rem;
+  color: $color-text-secondary;
+  margin: 0;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-lg;
+
+  @include respond-to(lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (max-width: 1199px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 899px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-md;
+  }
+
+  @media (max-width: 599px) {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+}
