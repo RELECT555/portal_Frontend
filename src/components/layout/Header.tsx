@@ -128,7 +128,7 @@ export const Header: React.FC = () => {
             />
             <rect width="26" height="38" rx="13" fill="url(#pillShine)" />
           </svg>
-          <span className={styles.logoText}>МЕДИПАЛ</span>
+          <span className={styles.logoText}>Я.МЕДИПАЛ</span>
         </Link>
 
         <nav className={styles.nav}>

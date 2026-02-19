@@ -13,19 +13,13 @@
 
 .heroNews {
   @include respond-to(md) {
-    grid-column: span 5;
+    grid-column: span 7;
   }
 }
 
 .newsList {
   @include respond-to(md) {
-    grid-column: span 4;
-  }
-}
-
-.calendar {
-  @include respond-to(md) {
-    grid-column: span 3;
+    grid-column: span 5;
   }
 }
 

@@ -1,3 +1,7 @@
+export type NewsCategory = 'all' | 'company' | 'hr' | 'it' | 'finance' | 'events' | 'announcements';
+
+export type SortOption = 'recent' | 'popular' | 'discussed';
+
 export interface NewsItem {
   id: string;
   title: string;
@@ -5,6 +9,7 @@ export interface NewsItem {
   imageUrl?: string;
   coverImageUrl?: string;
   publishedAt: string;
+  readingTimeMin?: number;
   likesCount: number;
   commentsCount: number;
   viewsCount: number;
@@ -16,7 +21,11 @@ export interface NewsItem {
   tags: string[];
 }
 
-export type NewsCategory = 'all' | 'company' | 'hr' | 'it' | 'finance' | 'events' | 'announcements';
+export interface NewsStats {
+  totalNews: number;
+  thisMonth: number;
+  totalAuthors: number;
+}
 
 export const NEWS_CATEGORY_LABELS: Record<NewsCategory, string> = {
   all: 'Все',
@@ -36,3 +45,24 @@ export const NEWS_CATEGORY_COLORS: Record<Exclude<NewsCategory, 'all'>, string> 
   events: '#ec4899',
   announcements: '#ef4444',
 };
+
+export const SORT_LABELS: Record<SortOption, string> = {
+  recent: 'Новые',
+  popular: 'Популярные',
+  discussed: 'Обсуждаемые',
+};
+
+export const SORT_OPTIONS: [SortOption, string][] = Object.entries(SORT_LABELS) as [
+  SortOption,
+  string,
+][];
+
+export const CATEGORY_TABS: NewsCategory[] = [
+  'all',
+  'company',
+  'hr',
+  'it',
+  'finance',
+  'events',
+  'announcements',
+];

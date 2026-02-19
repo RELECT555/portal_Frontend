@@ -1,15 +1,5 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import {
-  Box,
-  Button,
-  Tabs,
-  Tab,
-  Chip,
-  TextField,
-  InputAdornment,
-  Typography,
-  keyframes,
-} from '@mui/material';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { Box, TextField, InputAdornment, Typography, keyframes } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { SearchRounded, EditNoteRounded, CampaignRounded } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
@@ -49,9 +39,29 @@ const LivePage: React.FC = () => {
   const debouncedSearch = useDebounce(searchQuery);
   const [sortBy, setSortBy] = useState<SortOption>('recent');
 
-  const handleCategoryChange = useCallback((_: React.SyntheticEvent, value: number): void => {
-    setActiveCategory(CATEGORY_TABS[value]);
-  }, []);
+  const sortRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const segmentIndicatorRef = useRef<HTMLDivElement>(null);
+
+  const updateSegmentIndicator = useCallback((): void => {
+    const activeEl = sortRefs.current[sortBy];
+    const indicator = segmentIndicatorRef.current;
+    if (!activeEl || !indicator) return;
+
+    const parent = activeEl.parentElement;
+    if (!parent) return;
+
+    const parentRect = parent.getBoundingClientRect();
+    const elRect = activeEl.getBoundingClientRect();
+
+    indicator.style.left = `${elRect.left - parentRect.left}px`;
+    indicator.style.width = `${elRect.width}px`;
+  }, [sortBy]);
+
+  useEffect(() => {
+    updateSegmentIndicator();
+    window.addEventListener('resize', updateSegmentIndicator);
+    return () => window.removeEventListener('resize', updateSegmentIndicator);
+  }, [updateSegmentIndicator]);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchQuery(e.target.value);
@@ -98,8 +108,6 @@ const LivePage: React.FC = () => {
 
     return [...pinned, ...rest];
   }, [activeCategory, debouncedSearch, sortBy]);
-
-  const categoryIndex = CATEGORY_TABS.indexOf(activeCategory);
 
   const getCategoryCount = useCallback((cat: LiveCategory): number => {
     if (cat === 'all') return MOCK_LIVE_PUBLICATIONS.length;
@@ -179,79 +187,48 @@ const LivePage: React.FC = () => {
 
       {/* Toolbar */}
       <div className={styles.toolbar}>
-        <Tabs
-          value={categoryIndex}
-          onChange={handleCategoryChange}
-          variant="scrollable"
-          scrollButtons="auto"
-          textColor="primary"
-          indicatorColor="primary"
-          sx={{
-            minHeight: 40,
-            '& .MuiTab-root': {
-              minHeight: 40,
-              borderRadius: '10px',
-              mx: 0.25,
-              px: 1.5,
-              transition: 'background 0.15s',
-              '&:hover': {
-                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.04),
-              },
-            },
-            '& .MuiTabs-indicator': {
-              height: 3,
-              borderRadius: '3px 3px 0 0',
-            },
-          }}
-        >
-          {CATEGORY_TABS.map((cat) => (
-            <Tab
-              key={cat}
-              label={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                  {LIVE_CATEGORY_LABELS[cat]}
-                  <Chip
-                    label={getCategoryCount(cat)}
-                    size="small"
-                    sx={{
-                      height: 18,
-                      minWidth: 18,
-                      fontSize: '0.6rem',
-                      fontWeight: 700,
-                      bgcolor: (theme) =>
-                        cat === activeCategory
-                          ? alpha(theme.palette.primary.main, 0.1)
-                          : 'rgba(0,0,0,0.05)',
-                      color: cat === activeCategory ? 'primary.main' : 'text.secondary',
-                      '& .MuiChip-label': { px: 0.5 },
-                    }}
-                  />
-                </Box>
-              }
-            />
-          ))}
-        </Tabs>
+        <div className={styles.categoryPills}>
+          {CATEGORY_TABS.map((cat) => {
+            const isActive = cat === activeCategory;
+            return (
+              <button
+                key={cat}
+                className={`${styles.categoryPill} ${isActive ? styles.categoryPillActive : ''}`}
+                onClick={() => {
+                  setActiveCategory(cat);
+                }}
+                type="button"
+              >
+                <span className={styles.categoryPillLabel}>{LIVE_CATEGORY_LABELS[cat]}</span>
+                <span
+                  className={`${styles.categoryPillCount} ${isActive ? styles.categoryPillCountActive : ''}`}
+                >
+                  {getCategoryCount(cat)}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
         <div className={styles.toolbarSpacer} />
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        {/* macOS segmented control */}
+        <div className={styles.segmentedControl}>
+          <div className={styles.segmentedIndicator} ref={segmentIndicatorRef} />
           {(Object.entries(SORT_LABELS) as [SortOption, string][]).map(([key, label]) => (
-            <Chip
+            <button
               key={key}
-              label={label}
-              size="small"
-              variant={sortBy === key ? 'filled' : 'outlined'}
-              color={sortBy === key ? 'primary' : 'default'}
-              onClick={() => handleSortChange(key)}
-              sx={{
-                fontWeight: 600,
-                fontSize: '0.7rem',
-                cursor: 'pointer',
-                borderColor: sortBy === key ? undefined : 'divider',
+              ref={(el) => {
+                sortRefs.current[key] = el;
               }}
-            />
+              className={`${styles.segmentedOption} ${sortBy === key ? styles.segmentedOptionActive : ''}`}
+              onClick={() => handleSortChange(key)}
+              type="button"
+            >
+              {label}
+            </button>
           ))}
-        </Box>
+        </div>
 
         <TextField
           className={styles.searchField}
@@ -266,30 +243,25 @@ const LivePage: React.FC = () => {
               </InputAdornment>
             ),
             sx: {
-              borderRadius: '12px',
-              bgcolor: '#f8fafb',
+              borderRadius: '10px',
+              bgcolor: 'background.paper',
               fontSize: '0.8125rem',
               '& fieldset': { borderColor: 'divider' },
+              '&:hover fieldset': { borderColor: 'primary.light' },
+              '&.Mui-focused fieldset': {
+                borderColor: 'primary.main',
+                boxShadow: (theme) => `0 0 0 3px ${alpha(theme.palette.primary.main, 0.12)}`,
+              },
             },
           }}
         />
 
-        <Button
-          component={Link}
-          to={ROUTES.POST_CONSTRUCTOR}
-          variant="contained"
-          color="primary"
-          startIcon={<EditNoteRounded sx={{ fontSize: 18 }} />}
-          sx={{
-            borderRadius: '12px',
-            px: 2.5,
-            fontWeight: 600,
-            fontSize: '0.8125rem',
-            flexShrink: 0,
-          }}
-        >
-          Публикация
-        </Button>
+        <Link to={ROUTES.POST_CONSTRUCTOR} className={styles.publishButton}>
+          <span className={styles.publishButtonInner}>
+            <EditNoteRounded sx={{ fontSize: 16 }} />
+            Публикация
+          </span>
+        </Link>
       </div>
 
       {/* Publications grid */}

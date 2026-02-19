@@ -95,6 +95,222 @@
   flex-wrap: wrap;
 }
 
+// macOS-style category pills
+.categoryPills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  scrollbar-width: none;
+}
+
+.categoryPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  cursor: pointer;
+  color: $color-text-secondary;
+  background: transparent;
+  user-select: none;
+  transition:
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    color: $color-text-primary;
+    background: rgba(0, 0, 0, 0.04);
+    border-color: $color-divider;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.categoryPillActive {
+  font-weight: 600;
+  color: $color-primary;
+  background: rgba($color-primary, 0.08);
+  border-color: rgba($color-primary, 0.25);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 0 0.5px rgba($color-primary, 0.12),
+    0 1px 3px rgba($color-primary, 0.08);
+
+  &:hover {
+    color: $color-primary;
+    background: rgba($color-primary, 0.1);
+    border-color: rgba($color-primary, 0.3);
+  }
+}
+
+.categoryPillLabel {
+  line-height: 1;
+}
+
+.categoryPillCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.05);
+  color: $color-text-secondary;
+  line-height: 1;
+}
+
+.categoryPillCountActive {
+  background: rgba($color-primary, 0.14);
+  color: $color-primary;
+}
+
+// macOS segmented control
+.segmentedControl {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid $color-divider;
+  gap: 0;
+}
+
+.segmentedIndicator {
+  position: absolute;
+  top: 3px;
+  height: calc(100% - 6px);
+  border-radius: 7px;
+  background: $color-bg-card;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  transition:
+    left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+
+.segmentedOption {
+  position: relative;
+  z-index: 1;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: inherit;
+  line-height: 1.5;
+  border: none;
+  cursor: pointer;
+  border-radius: 7px;
+  color: $color-text-secondary;
+  background: transparent;
+  user-select: none;
+  transition:
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    font-weight 0.15s ease;
+
+  &:hover {
+    color: $color-text-primary;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.segmentedOptionActive {
+  font-weight: 600;
+  color: $color-text-primary;
+}
+
+// macOS textured publish button
+.publishButton {
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: 10px;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba($color-primary, 0.7) 0%,
+    darken($color-primary, 8%) 100%
+  );
+  box-shadow:
+    0 0.5px 0 0 rgba(255, 255, 255, 0.1) inset,
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 2px 6px rgba($color-primary, 0.2);
+  text-decoration: none;
+  transition:
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    box-shadow:
+      0 0.5px 0 0 rgba(255, 255, 255, 0.15) inset,
+      0 2px 8px rgba(0, 0, 0, 0.12),
+      0 4px 16px rgba($color-primary, 0.25);
+    transform: translateY(-0.5px);
+  }
+
+  &:active {
+    transform: translateY(0.5px) scale(0.98);
+    box-shadow:
+      0 0.5px 0 0 rgba(255, 255, 255, 0.05) inset,
+      0 1px 2px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.publishButtonInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 9px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+  background: linear-gradient(
+    180deg,
+    lighten($color-primary, 4%) 0%,
+    $color-primary 50%,
+    darken($color-primary, 4%) 100%
+  );
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s ease;
+
+  .publishButton:hover & {
+    background: linear-gradient(
+      180deg,
+      lighten($color-primary, 8%) 0%,
+      lighten($color-primary, 2%) 50%,
+      $color-primary 100%
+    );
+  }
+}
+
 .searchField {
   width: 260px;
   flex-shrink: 0;

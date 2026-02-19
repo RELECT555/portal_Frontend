@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import {
   MainNewsWidget,
   NewsListWidget,
-  CalendarWidget,
   PeopleCarousel,
   IdeasBankWidget,
   LiveWidget,
@@ -35,9 +34,6 @@ const HomePage: React.FC = () => {
       </div>
       <div className={styles.newsList}>
         <NewsListWidget news={MOCK_NEWS} />
-      </div>
-      <div className={styles.calendar}>
-        <CalendarWidget />
       </div>
 
       <div className={styles.ideasBank}>

@@ -7,59 +7,38 @@ import {
   ChatBubbleOutline,
   PushPin,
   NewspaperRounded,
+  AccessTimeRounded,
 } from '@mui/icons-material';
-import dayjs from 'dayjs';
 import type { NewsItem } from '../types';
 import { NEWS_CATEGORY_LABELS, NEWS_CATEGORY_COLORS } from '../types';
+import {
+  getInitials,
+  formatCount,
+  formatRelativeDate,
+  getCategoryColor,
+  estimateReadingTime,
+} from '../utils';
 import styles from '../NewsPage.module.scss';
 
 interface Props {
   item: NewsItem;
 }
 
-const getInitials = (name: string): string =>
-  name
-    .split(' ')
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join('')
-    .toUpperCase();
-
-const formatCount = (count: number): string => {
-  if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
-  return String(count);
-};
-
 export const NewsCard: React.FC<Props> = React.memo(({ item }) => {
-  const categoryColor =
-    item.category !== 'all' ? (NEWS_CATEGORY_COLORS[item.category] ?? '#64748b') : '#64748b';
+  const categoryColor = getCategoryColor(item.category, NEWS_CATEGORY_COLORS);
+  const readTime = item.readingTimeMin ?? estimateReadingTime(item.content);
 
   return (
     <article className={styles.card}>
       <div className={styles.cardImage}>
-        <Box className={styles.cardImageInner} sx={{ bgcolor: alpha(categoryColor, 0.06) }}>
-          <Box
-            sx={{
-              position: 'absolute',
-              top: -30,
-              right: -30,
-              width: 120,
-              height: 120,
-              borderRadius: '50%',
-              bgcolor: alpha(categoryColor, 0.06),
-            }}
-          />
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: -20,
-              left: '30%',
-              width: 80,
-              height: 80,
-              borderRadius: '50%',
-              bgcolor: alpha(categoryColor, 0.04),
-            }}
-          />
+        <div
+          className={styles.cardImageInner}
+          style={{
+            background: item.coverImageUrl
+              ? undefined
+              : `linear-gradient(135deg, ${alpha(categoryColor, 0.07)} 0%, ${alpha('#6366f1', 0.04)} 50%, ${alpha('#f59e0b', 0.02)} 100%)`,
+          }}
+        >
           {item.coverImageUrl ? (
             <Box
               component="img"
@@ -74,20 +53,25 @@ export const NewsCard: React.FC<Props> = React.memo(({ item }) => {
               }}
             />
           ) : (
-            <NewspaperRounded sx={{ fontSize: 40, color: alpha(categoryColor, 0.3) }} />
+            <NewspaperRounded sx={{ fontSize: 36, color: alpha(categoryColor, 0.18) }} />
           )}
-        </Box>
+        </div>
 
         <div className={styles.cardImageOverlay}>
           {item.isPinned && (
             <span className={styles.cardPinnedBadge}>
-              <PushPin sx={{ fontSize: 10 }} />
+              <PushPin sx={{ fontSize: 9 }} />
               Закреп
             </span>
           )}
           <span className={styles.cardCategoryBadge}>
             {NEWS_CATEGORY_LABELS[item.category] ?? item.category}
           </span>
+        </div>
+
+        <div className={styles.cardReadTime}>
+          <AccessTimeRounded sx={{ fontSize: 10 }} />
+          {readTime} мин
         </div>
       </div>
 
@@ -110,11 +94,11 @@ export const NewsCard: React.FC<Props> = React.memo(({ item }) => {
         <div className={styles.cardAuthor}>
           <Avatar
             sx={{
-              width: 22,
-              height: 22,
-              fontSize: '0.55rem',
-              fontWeight: 700,
-              bgcolor: alpha(categoryColor, 0.15),
+              width: 18,
+              height: 18,
+              fontSize: '0.5rem',
+              fontWeight: 600,
+              bgcolor: alpha(categoryColor, 0.08),
               color: categoryColor,
             }}
           >
@@ -124,22 +108,22 @@ export const NewsCard: React.FC<Props> = React.memo(({ item }) => {
             <span className={styles.cardAuthorName}>{item.authorName}</span>
             <span className={styles.cardDate}>
               {' · '}
-              {dayjs(item.publishedAt).format('DD MMM')}
+              {formatRelativeDate(item.publishedAt)}
             </span>
           </div>
         </div>
 
         <div className={styles.cardStats}>
           <span className={styles.cardStat}>
-            <ThumbUpOutlined sx={{ fontSize: 13 }} />
+            <ThumbUpOutlined sx={{ fontSize: 11 }} />
             {formatCount(item.likesCount)}
           </span>
           <span className={styles.cardStat}>
-            <VisibilityOutlined sx={{ fontSize: 13 }} />
+            <VisibilityOutlined sx={{ fontSize: 11 }} />
             {formatCount(item.viewsCount)}
           </span>
           <span className={styles.cardStat}>
-            <ChatBubbleOutline sx={{ fontSize: 13 }} />
+            <ChatBubbleOutline sx={{ fontSize: 11 }} />
             {formatCount(item.commentsCount)}
           </span>
         </div>
