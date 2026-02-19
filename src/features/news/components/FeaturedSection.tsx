@@ -32,9 +32,7 @@ const SidebarCard: React.FC<{ item: NewsItem }> = React.memo(({ item }) => {
         <NewspaperRounded sx={{ fontSize: 22, color: alpha(catColor, 0.25) }} />
       </div>
       <div className={styles.featuredSideBody}>
-        <span className={styles.cardCategoryBadge} style={{ alignSelf: 'flex-start' }}>
-          {NEWS_CATEGORY_LABELS[item.category]}
-        </span>
+        <span className={styles.cardCategoryBadge}>{NEWS_CATEGORY_LABELS[item.category]}</span>
         <h4 className={styles.featuredSideTitle}>{item.title}</h4>
         <div className={styles.featuredSideMeta}>
           <span>{formatRelativeDate(item.publishedAt)}</span>
@@ -157,18 +155,7 @@ export const FeaturedSection: React.FC<Props> = React.memo(({ mainNews, sidebarN
           ))}
 
           {sidebarNews.length === 0 && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flex: 1,
-                padding: '32px 0',
-                color: '#94a3b8',
-                fontSize: '0.8125rem',
-              }}
-            >
+            <div className={styles.featuredSideEmpty}>
               <PushPin sx={{ fontSize: 18, mb: 0.5, opacity: 0.3 }} />
               Нет закреплённых
             </div>

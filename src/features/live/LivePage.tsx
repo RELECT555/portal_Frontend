@@ -3,6 +3,7 @@ import { Box, TextField, InputAdornment, Typography, keyframes } from '@mui/mate
 import { alpha } from '@mui/material/styles';
 import { SearchRounded, EditNoteRounded, CampaignRounded } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import classnames from 'classnames';
 import { ROUTES } from '@/lib/constants';
 import { useDebounce } from '@/hooks';
 import { LivePublicationCard } from './components/LivePublicationCard';
@@ -33,6 +34,68 @@ const SORT_LABELS: Record<SortOption, string> = {
   discussed: 'Обсуждаемые',
 };
 
+interface CategoryPillProps {
+  category: LiveCategory;
+  isActive: boolean;
+  count: number;
+  onClick: (cat: LiveCategory) => void;
+}
+
+const CategoryPill: React.FC<CategoryPillProps> = React.memo(
+  ({ category, isActive, count, onClick }) => {
+    const handleClick = useCallback((): void => {
+      onClick(category);
+    }, [onClick, category]);
+
+    return (
+      <button
+        key={category}
+        className={classnames(styles.categoryPill, { [styles.categoryPillActive]: isActive })}
+        onClick={handleClick}
+        type="button"
+      >
+        <span className={styles.categoryPillLabel}>{LIVE_CATEGORY_LABELS[category]}</span>
+        <span
+          className={classnames(styles.categoryPillCount, {
+            [styles.categoryPillCountActive]: isActive,
+          })}
+        >
+          {count}
+        </span>
+      </button>
+    );
+  },
+);
+
+interface SortButtonProps {
+  sortKey: SortOption;
+  label: string;
+  isActive: boolean;
+  onClick: (option: SortOption) => void;
+  buttonRef: (el: HTMLButtonElement | null) => void;
+}
+
+const SortButton: React.FC<SortButtonProps> = React.memo(
+  ({ sortKey, label, isActive, onClick, buttonRef }) => {
+    const handleClick = useCallback((): void => {
+      onClick(sortKey);
+    }, [onClick, sortKey]);
+
+    return (
+      <button
+        ref={buttonRef}
+        className={classnames(styles.segmentedOption, {
+          [styles.segmentedOptionActive]: isActive,
+        })}
+        onClick={handleClick}
+        type="button"
+      >
+        {label}
+      </button>
+    );
+  },
+);
+
 const LivePage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<LiveCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,6 +125,10 @@ const LivePage: React.FC = () => {
     window.addEventListener('resize', updateSegmentIndicator);
     return () => window.removeEventListener('resize', updateSegmentIndicator);
   }, [updateSegmentIndicator]);
+
+  const handleCategoryChange = useCallback((cat: LiveCategory): void => {
+    setActiveCategory(cat);
+  }, []);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchQuery(e.target.value);
@@ -188,26 +255,15 @@ const LivePage: React.FC = () => {
       {/* Toolbar */}
       <div className={styles.toolbar}>
         <div className={styles.categoryPills}>
-          {CATEGORY_TABS.map((cat) => {
-            const isActive = cat === activeCategory;
-            return (
-              <button
-                key={cat}
-                className={`${styles.categoryPill} ${isActive ? styles.categoryPillActive : ''}`}
-                onClick={() => {
-                  setActiveCategory(cat);
-                }}
-                type="button"
-              >
-                <span className={styles.categoryPillLabel}>{LIVE_CATEGORY_LABELS[cat]}</span>
-                <span
-                  className={`${styles.categoryPillCount} ${isActive ? styles.categoryPillCountActive : ''}`}
-                >
-                  {getCategoryCount(cat)}
-                </span>
-              </button>
-            );
-          })}
+          {CATEGORY_TABS.map((cat) => (
+            <CategoryPill
+              key={cat}
+              category={cat}
+              isActive={cat === activeCategory}
+              count={getCategoryCount(cat)}
+              onClick={handleCategoryChange}
+            />
+          ))}
         </div>
 
         <div className={styles.toolbarSpacer} />
@@ -216,17 +272,16 @@ const LivePage: React.FC = () => {
         <div className={styles.segmentedControl}>
           <div className={styles.segmentedIndicator} ref={segmentIndicatorRef} />
           {(Object.entries(SORT_LABELS) as [SortOption, string][]).map(([key, label]) => (
-            <button
+            <SortButton
               key={key}
-              ref={(el) => {
+              sortKey={key}
+              label={label}
+              isActive={sortBy === key}
+              onClick={handleSortChange}
+              buttonRef={(el) => {
                 sortRefs.current[key] = el;
               }}
-              className={`${styles.segmentedOption} ${sortBy === key ? styles.segmentedOptionActive : ''}`}
-              onClick={() => handleSortChange(key)}
-              type="button"
-            >
-              {label}
-            </button>
+            />
           ))}
         </div>
 

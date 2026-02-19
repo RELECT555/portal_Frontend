@@ -70,6 +70,22 @@ export const Header: React.FC = () => {
     [location.pathname],
   );
 
+  const handleSearchInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearchQuery(e.target.value);
+  }, []);
+
+  const handleSearchFocus = useCallback((): void => {
+    setSearchFocused(true);
+  }, []);
+
+  const handleSearchBlur = useCallback((): void => {
+    setSearchFocused(false);
+  }, []);
+
+  const handleCloseDropdown = useCallback((): void => {
+    setOpenDropdown(null);
+  }, []);
+
   const handleSearchSubmit = useCallback(
     (e: React.FormEvent): void => {
       e.preventDefault();
@@ -162,7 +178,7 @@ export const Header: React.FC = () => {
                         className={classnames(styles.dropdownLink, {
                           [styles.dropdownLinkActive]: location.pathname === child.path,
                         })}
-                        onClick={() => setOpenDropdown(null)}
+                        onClick={handleCloseDropdown}
                       >
                         {child.label}
                       </Link>
@@ -197,9 +213,9 @@ export const Header: React.FC = () => {
             type="text"
             placeholder="Поиск..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setSearchFocused(false)}
+            onChange={handleSearchInputChange}
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchBlur}
           />
           {!searchFocused && !searchQuery && <kbd className={styles.searchKbd}>⌘K</kbd>}
         </form>

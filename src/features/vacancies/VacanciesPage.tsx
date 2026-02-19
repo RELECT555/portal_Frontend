@@ -34,6 +34,80 @@ const SORT_LABELS: Record<SortOption, string> = {
   hot: 'Срочные',
 };
 
+interface SortChipProps {
+  sortKey: SortOption;
+  label: string;
+  isActive: boolean;
+  onClick: (option: SortOption) => void;
+}
+
+const SortChip: React.FC<SortChipProps> = React.memo(({ sortKey, label, isActive, onClick }) => {
+  const handleClick = useCallback((): void => {
+    onClick(sortKey);
+  }, [onClick, sortKey]);
+
+  return (
+    <Chip
+      label={label}
+      size="small"
+      icon={
+        sortKey === 'hot' ? (
+          <LocalFireDepartmentRounded sx={{ fontSize: '14px !important' }} />
+        ) : undefined
+      }
+      variant={isActive ? 'filled' : 'outlined'}
+      color={isActive ? 'primary' : 'default'}
+      onClick={handleClick}
+      sx={{
+        fontWeight: 600,
+        fontSize: '0.7rem',
+        cursor: 'pointer',
+        borderColor: isActive ? undefined : 'divider',
+      }}
+    />
+  );
+});
+
+interface DepartmentButtonProps {
+  department: VacancyDepartment;
+  isActive: boolean;
+  count: number;
+  onClick: (dept: VacancyDepartment) => void;
+}
+
+const DepartmentButton: React.FC<DepartmentButtonProps> = React.memo(
+  ({ department, isActive, count, onClick }) => {
+    const handleClick = useCallback((): void => {
+      onClick(department);
+    }, [onClick, department]);
+
+    return (
+      <button
+        className={classnames(styles.sidebarItem, {
+          [styles.sidebarItemActive]: isActive,
+        })}
+        onClick={handleClick}
+      >
+        <span
+          className={classnames(styles.sidebarIcon, {
+            [styles.sidebarIconActive]: isActive,
+          })}
+        >
+          {VACANCY_DEPARTMENT_ICONS[department]}
+        </span>
+        <span className={styles.sidebarLabel}>{VACANCY_DEPARTMENT_LABELS[department]}</span>
+        <span
+          className={classnames(styles.sidebarCount, {
+            [styles.sidebarCountActive]: isActive,
+          })}
+        >
+          {count}
+        </span>
+      </button>
+    );
+  },
+);
+
 const VacanciesPage: React.FC = () => {
   const [vacancies, setVacancies] = useState<Vacancy[]>(MOCK_VACANCIES_FULL);
   const [activeDepartment, setActiveDepartment] = useState<VacancyDepartment>('all');
@@ -215,24 +289,12 @@ const VacanciesPage: React.FC = () => {
       <div className={styles.toolbar}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           {(Object.entries(SORT_LABELS) as [SortOption, string][]).map(([key, label]) => (
-            <Chip
+            <SortChip
               key={key}
+              sortKey={key}
               label={label}
-              size="small"
-              icon={
-                key === 'hot' ? (
-                  <LocalFireDepartmentRounded sx={{ fontSize: '14px !important' }} />
-                ) : undefined
-              }
-              variant={sortBy === key ? 'filled' : 'outlined'}
-              color={sortBy === key ? 'primary' : 'default'}
-              onClick={() => handleSortChange(key)}
-              sx={{
-                fontWeight: 600,
-                fontSize: '0.7rem',
-                cursor: 'pointer',
-                borderColor: sortBy === key ? undefined : 'divider',
-              }}
+              isActive={sortBy === key}
+              onClick={handleSortChange}
             />
           ))}
         </Box>
@@ -283,29 +345,24 @@ const VacanciesPage: React.FC = () => {
       <div className={styles.content}>
         {/* Sidebar */}
         <nav className={styles.sidebar}>
-          {DEPARTMENTS.map((dept) => {
-            const count = getDepartmentCount(dept);
-            if (dept !== 'all' && count === 0) return null;
-            return (
-              <button
-                key={dept}
-                className={classnames(styles.sidebarItem, {
-                  [styles.sidebarItemActive]: activeDepartment === dept,
-                })}
-                onClick={() => handleDepartmentChange(dept)}
-              >
-                <span className={styles.sidebarIcon}>{VACANCY_DEPARTMENT_ICONS[dept]}</span>
-                {VACANCY_DEPARTMENT_LABELS[dept]}
-                <span
-                  className={classnames(styles.sidebarCount, {
-                    [styles.sidebarCountActive]: activeDepartment === dept,
-                  })}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+          <div className={styles.sidebarSection}>
+            <span className={styles.sidebarSectionLabel}>Отделы</span>
+          </div>
+          <div className={styles.sidebarList}>
+            {DEPARTMENTS.map((dept) => {
+              const count = getDepartmentCount(dept);
+              if (dept !== 'all' && count === 0) return null;
+              return (
+                <DepartmentButton
+                  key={dept}
+                  department={dept}
+                  isActive={activeDepartment === dept}
+                  count={count}
+                  onClick={handleDepartmentChange}
+                />
+              );
+            })}
+          </div>
         </nav>
 
         {/* Vacancy list */}

@@ -129,22 +129,48 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: $spacing-sm 0;
+  padding: $spacing-sm;
   position: sticky;
   top: calc($header-height + $spacing-lg);
   align-self: start;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: $border-radius-card;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 8px 24px -4px rgba(0, 0, 0, 0.06);
 
   @media (max-width: $breakpoint-md) {
     display: none;
   }
 }
 
+.sidebarSection {
+  padding: 4px $spacing-sm 6px;
+}
+
+.sidebarSectionLabel {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+}
+
+.sidebarList {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
 .sidebarItem {
   display: flex;
   align-items: center;
-  gap: $spacing-sm;
-  padding: 7px 12px;
+  gap: 9px;
+  padding: 7px $spacing-sm;
   border-radius: $border-radius-md;
   font-size: 0.8125rem;
   font-weight: 500;
@@ -157,6 +183,7 @@
   background: none;
   text-align: left;
   width: 100%;
+  position: relative;
 
   &:hover {
     background: rgba(0, 0, 0, 0.04);
@@ -170,33 +197,48 @@
   font-weight: 600;
 
   &:hover {
-    background: rgba($color-primary, 0.14);
+    background: rgba($color-primary, 0.13);
     color: $color-primary;
   }
 }
 
 .sidebarIcon {
-  font-size: 1rem;
+  font-size: 0.9375rem;
   line-height: 1;
-  width: 20px;
+  width: 18px;
   text-align: center;
   flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.sidebarIconActive {
+  opacity: 1;
+}
+
+.sidebarLabel {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebarCount {
   margin-left: auto;
-  font-size: 0.7rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   color: $color-text-secondary;
-  background: rgba(0, 0, 0, 0.05);
-  padding: 1px 7px;
-  border-radius: 10px;
-  min-width: 22px;
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 6px;
+  border-radius: 20px;
+  min-width: 20px;
   text-align: center;
+  line-height: 1.6;
+  flex-shrink: 0;
 }
 
 .sidebarCountActive {
-  background: rgba($color-primary, 0.12);
+  background: rgba($color-primary, 0.15);
   color: $color-primary;
 }
 
@@ -484,6 +526,11 @@
   border-radius: $border-radius-sm;
   background: rgba(0, 0, 0, 0.02);
   border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.detailInfoLink {
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .detailInfoLabel {

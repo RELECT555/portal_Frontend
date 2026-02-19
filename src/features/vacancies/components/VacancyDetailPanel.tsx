@@ -133,8 +133,7 @@ export const VacancyDetailPanel: React.FC<Props> = React.memo(({ vacancy, onClos
                 href={vacancy.hhUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={styles.detailInfoItem}
-                style={{ textDecoration: 'none', cursor: 'pointer' }}
+                className={`${styles.detailInfoItem} ${styles.detailInfoLink}`}
               >
                 <span className={styles.detailInfoLabel}>Ссылка на hh.ru</span>
                 <span className={styles.detailHhLink}>
