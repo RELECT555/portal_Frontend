@@ -20,6 +20,7 @@ const LibraryPage = lazy(() => import('@/features/library/LibraryPage'));
 const PostConstructorPage = lazy(
   () => import('@/features/post-constructor/components/PostConstructorPage'),
 );
+const ProfilePage = lazy(() => import('@/features/profile/ProfilePage'));
 
 const PageLoader: React.FC = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
@@ -52,6 +53,7 @@ export const AppRoutes: React.FC = () => (
       <Route path={ROUTES.LIBRARY} element={withSuspense(LibraryPage)} />
       <Route path={ROUTES.POST_CONSTRUCTOR} element={withSuspense(PostConstructorPage)} />
       <Route path={ROUTES.POST_CONSTRUCTOR_EDIT} element={withSuspense(PostConstructorPage)} />
+      <Route path={ROUTES.PROFILE} element={withSuspense(ProfilePage)} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   </Routes>

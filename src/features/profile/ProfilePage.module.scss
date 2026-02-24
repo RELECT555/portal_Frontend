@@ -1,0 +1,967 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// ── Glass tokens ─────────────────────────────────
+$glass-bg: rgba(255, 255, 255, 0.55);
+$glass-bg-hover: rgba(255, 255, 255, 0.7);
+$glass-border: rgba(255, 255, 255, 0.45);
+$glass-border-hover: rgba(255, 255, 255, 0.65);
+$glass-blur: 20px;
+$glass-shadow:
+  0 8px 32px rgba(0, 0, 0, 0.06),
+  0 1px 3px rgba(0, 0, 0, 0.04),
+  inset 0 1px 0 rgba(255, 255, 255, 0.7);
+$glass-shadow-hover:
+  0 16px 48px rgba(0, 0, 0, 0.08),
+  0 2px 6px rgba(0, 0, 0, 0.04),
+  inset 0 1px 0 rgba(255, 255, 255, 0.8);
+$glow-primary: rgba($color-primary, 0.25);
+
+// ── Page ─────────────────────────────────────────
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: $content-max-width;
+  position: relative;
+}
+
+// ── Ambient background glow ──────────────────────
+.ambientGlow {
+  position: fixed;
+  top: -200px;
+  right: -100px;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(#a5b4fc, 0.07) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambientGlow2 {
+  position: fixed;
+  bottom: -150px;
+  left: -150px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(#5eead4, 0.05) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+// ── Hero section ─────────────────────────────────
+.hero {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.heroBanner {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  background: #0f172a;
+
+  @include respond-to(md) {
+    height: 240px;
+  }
+}
+
+.auroraBase {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    #0f172a 0%,
+    #1e1b4b 30%,
+    #172554 50%,
+    #1e293b 70%,
+    #0f172a 100%
+  );
+}
+
+.auroraBlob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  will-change: transform;
+  transform: translate(-50%, -50%);
+}
+
+.heroBannerNoise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px;
+}
+
+.heroGlass {
+  position: relative;
+  margin: -72px 20px 0;
+  padding: 28px 32px;
+  background: $glass-bg;
+  backdrop-filter: blur($glass-blur) saturate(1.8);
+  -webkit-backdrop-filter: blur($glass-blur) saturate(1.8);
+  border: 1px solid $glass-border;
+  border-radius: 20px;
+  box-shadow: $glass-shadow;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 2;
+
+  @include respond-to(md) {
+    flex-direction: row;
+    align-items: center;
+    gap: 28px;
+    margin: -80px 28px 0;
+    padding: 28px 36px;
+  }
+}
+
+.avatarWrapper {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.avatarGlow {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(99, 102, 241, 0.35) 0%,
+    rgba(14, 165, 233, 0.2) 40%,
+    transparent 70%
+  );
+  animation: avatarPulse 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes avatarPulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.08);
+  }
+}
+
+.avatar {
+  position: relative;
+  z-index: 1;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  object-fit: cover;
+  background: linear-gradient(135deg, $color-primary-light, $color-primary);
+
+  @include respond-to(md) {
+    width: 108px;
+    height: 108px;
+  }
+}
+
+.avatarFallback {
+  position: relative;
+  z-index: 1;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(135deg, #818cf8 0%, #6366f1 40%, #0ea5e9 100%);
+  @include flex-center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: $color-text-white;
+  letter-spacing: -0.02em;
+
+  @include respond-to(md) {
+    width: 108px;
+    height: 108px;
+    font-size: 2.25rem;
+  }
+}
+
+.heroInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.heroName {
+  font-size: 1.625rem;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: $color-text-primary;
+  margin: 0 0 4px;
+  line-height: 1.15;
+
+  @include respond-to(md) {
+    font-size: 1.875rem;
+  }
+}
+
+.heroPosition {
+  font-size: 0.875rem;
+  color: $color-primary;
+  font-weight: 600;
+  margin: 0 0 2px;
+}
+
+.heroDepartment {
+  font-size: 0.75rem;
+  color: $color-text-secondary;
+  margin: 0;
+  font-weight: 400;
+}
+
+// ── Bento Grid ───────────────────────────────────
+.bentoGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  position: relative;
+  z-index: 1;
+
+  @include respond-to(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to(lg) {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.bentoSpan3 {
+  @include respond-to(lg) {
+    grid-column: span 3;
+  }
+}
+
+.bentoSpan4 {
+  @include respond-to(lg) {
+    grid-column: span 4;
+  }
+}
+
+.bentoSpan5 {
+  @include respond-to(lg) {
+    grid-column: span 5;
+  }
+}
+
+.bentoSpan6 {
+  @include respond-to(lg) {
+    grid-column: span 6;
+  }
+}
+
+.bentoSpan7 {
+  @include respond-to(lg) {
+    grid-column: span 7;
+  }
+}
+
+.bentoSpan8 {
+  @include respond-to(lg) {
+    grid-column: span 8;
+  }
+}
+
+.bentoSpan12 {
+  @include respond-to(lg) {
+    grid-column: span 12;
+  }
+  @include respond-to(sm) {
+    grid-column: span 2;
+  }
+}
+
+// ── Glass Card base ──────────────────────────────
+.glassCard {
+  background: $glass-bg;
+  backdrop-filter: blur($glass-blur) saturate(1.6);
+  -webkit-backdrop-filter: blur($glass-blur) saturate(1.6);
+  border: 1px solid $glass-border;
+  border-radius: 20px;
+  box-shadow: $glass-shadow;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+
+  &:hover {
+    background: $glass-bg-hover;
+    border-color: $glass-border-hover;
+    box-shadow: $glass-shadow-hover;
+  }
+}
+
+.cardShine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6) 50%, transparent);
+  pointer-events: none;
+}
+
+.cardTitle {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $color-text-secondary;
+  margin: 0 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cardTitleIcon {
+  @include flex-center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgba($color-primary, 0.1);
+  color: $color-primary;
+  font-size: 0.8125rem;
+}
+
+// ── Info card ────────────────────────────────────
+.infoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.infoRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.infoIcon {
+  @include flex-center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba($color-primary, 0.06);
+  color: $color-text-secondary;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+
+  .infoRow:hover & {
+    background: rgba($color-primary, 0.12);
+    color: $color-primary;
+  }
+}
+
+.infoContent {
+  min-width: 0;
+  flex: 1;
+}
+
+.infoLabel {
+  font-size: 0.625rem;
+  color: $color-text-secondary;
+  margin: 0 0 1px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.infoValue {
+  font-size: 0.8125rem;
+  color: $color-text-primary;
+  font-weight: 500;
+  margin: 0;
+  @include text-ellipsis;
+}
+
+// ── Bio card ─────────────────────────────────────
+.bioText {
+  font-size: 0.875rem;
+  color: $color-text-primary;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.skillsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.skillChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  background: rgba($color-primary, 0.08);
+  color: $color-primary-dark;
+  border: 1px solid rgba($color-primary, 0.1);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  cursor: default;
+
+  &:hover {
+    background: rgba($color-primary, 0.15);
+    border-color: rgba($color-primary, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba($color-primary, 0.1);
+  }
+}
+
+// ── Stats card ───────────────────────────────────
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 8px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.65);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: $color-text-primary;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.statLabel {
+  font-size: 0.625rem;
+  color: $color-text-secondary;
+  margin-top: 4px;
+  text-align: center;
+  font-weight: 500;
+}
+
+// ── Achievements ─────────────────────────────────
+$ach-common: #64748b;
+$ach-rare: #3b82f6;
+$ach-epic: #a855f7;
+$ach-legendary: #f59e0b;
+
+.achHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .cardTitle {
+    margin-bottom: 0;
+  }
+}
+
+.achSummary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.achSummaryCount {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: $color-text-primary;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.achSummaryBar {
+  width: 80px;
+  height: 6px;
+  border-radius: 100px;
+  background: rgba($color-primary, 0.1);
+  overflow: hidden;
+}
+
+.achSummaryBarFill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, $color-primary, $color-primary-light);
+}
+
+.achTabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 18px;
+  padding: 3px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.03);
+  width: fit-content;
+}
+
+.achTab {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: $color-text-secondary;
+  background: transparent;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    color: $color-text-primary;
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
+
+.achTabActive {
+  background: rgba(255, 255, 255, 0.85);
+  color: $color-primary;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.achGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+
+  @include respond-to(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.achBadge {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  cursor: default;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.07);
+  }
+
+  &:hover .achBadgeGlow {
+    opacity: 1;
+  }
+}
+
+.achBadgeLocked {
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.achBadgeGlow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.achRarity_common {
+  &.achBadge {
+    border-color: rgba($ach-common, 0.12);
+  }
+  &.achBadge:hover {
+    border-color: rgba($ach-common, 0.25);
+  }
+  .achBadgeGlow {
+    background: radial-gradient(ellipse at 30% 20%, rgba($ach-common, 0.06) 0%, transparent 70%);
+  }
+}
+
+.achRarity_rare {
+  &.achBadge {
+    border-color: rgba($ach-rare, 0.12);
+  }
+  &.achBadge:hover {
+    border-color: rgba($ach-rare, 0.25);
+  }
+  .achBadgeGlow {
+    background: radial-gradient(ellipse at 30% 20%, rgba($ach-rare, 0.08) 0%, transparent 70%);
+  }
+}
+
+.achRarity_epic {
+  &.achBadge {
+    border-color: rgba($ach-epic, 0.12);
+  }
+  &.achBadge:hover {
+    border-color: rgba($ach-epic, 0.25);
+  }
+  .achBadgeGlow {
+    background: radial-gradient(ellipse at 30% 20%, rgba($ach-epic, 0.08) 0%, transparent 70%);
+  }
+}
+
+.achRarity_legendary {
+  &.achBadge {
+    border-color: rgba($ach-legendary, 0.15);
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  &.achBadge:hover {
+    border-color: rgba($ach-legendary, 0.3);
+    box-shadow:
+      0 8px 28px rgba($ach-legendary, 0.1),
+      0 0 0 1px rgba($ach-legendary, 0.05);
+  }
+
+  .achBadgeGlow {
+    background: radial-gradient(ellipse at 30% 20%, rgba($ach-legendary, 0.1) 0%, transparent 70%);
+  }
+}
+
+.achBadgeIcon {
+  position: relative;
+  flex-shrink: 0;
+  @include flex-center;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba($color-secondary, 0.1), rgba($color-secondary, 0.03));
+}
+
+.achBadgeIconLocked {
+  filter: grayscale(0.6);
+  opacity: 0.6;
+}
+
+.achBadgeEmoji {
+  font-size: 1.2rem;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.achBadgeIconRing {
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  animation: achRingPulse 3s ease-in-out infinite;
+  pointer-events: none;
+
+  .achRarity_common & {
+    border-color: rgba($ach-common, 0.15);
+  }
+  .achRarity_rare & {
+    border-color: rgba($ach-rare, 0.2);
+  }
+  .achRarity_epic & {
+    border-color: rgba($ach-epic, 0.2);
+  }
+  .achRarity_legendary & {
+    border-color: rgba($ach-legendary, 0.25);
+  }
+}
+
+@keyframes achRingPulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+.achBadgeContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.achBadgeTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+}
+
+.achBadgeTitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.achRarityTag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &.achRarity_common {
+    background: rgba($ach-common, 0.08);
+    color: $ach-common;
+  }
+
+  &.achRarity_rare {
+    background: rgba($ach-rare, 0.08);
+    color: $ach-rare;
+  }
+
+  &.achRarity_epic {
+    background: rgba($ach-epic, 0.08);
+    color: $ach-epic;
+  }
+
+  &.achRarity_legendary {
+    background: rgba($ach-legendary, 0.08);
+    color: darken($ach-legendary, 8%);
+  }
+}
+
+.achBadgeDesc {
+  font-size: 0.6875rem;
+  color: $color-text-secondary;
+  margin: 0 0 4px;
+  line-height: 1.4;
+}
+
+.achProgress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.achProgressBar {
+  flex: 1;
+  height: 5px;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.achProgressFill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.5s ease;
+
+  &.achRarity_common {
+    background: linear-gradient(90deg, lighten($ach-common, 10%), $ach-common);
+  }
+  &.achRarity_rare {
+    background: linear-gradient(90deg, lighten($ach-rare, 10%), $ach-rare);
+  }
+  &.achRarity_epic {
+    background: linear-gradient(90deg, lighten($ach-epic, 10%), $ach-epic);
+  }
+  &.achRarity_legendary {
+    background: linear-gradient(90deg, lighten($ach-legendary, 10%), $ach-legendary);
+  }
+}
+
+.achProgressText {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: $color-text-secondary;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.achBadgeDate {
+  font-size: 0.5625rem;
+  color: $color-text-secondary;
+  margin: 4px 0 0;
+  opacity: 0.7;
+}
+
+// ── Activity card ────────────────────────────────
+.activityList {
+  display: flex;
+  flex-direction: column;
+}
+
+.activityItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba($color-border, 0.3);
+  transition: background 0.15s ease;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.activityIcon {
+  @include flex-center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  font-size: 0.9375rem;
+}
+
+.activityIconPost {
+  background: rgba($color-info, 0.08);
+  color: $color-info;
+}
+
+.activityIconIdea {
+  background: rgba($color-secondary, 0.08);
+  color: $color-secondary;
+}
+
+.activityIconGratitude {
+  background: rgba($color-error, 0.06);
+  color: $color-error;
+}
+
+.activityIconBook {
+  background: rgba($color-primary, 0.06);
+  color: $color-primary;
+}
+
+.activityIconEvent {
+  background: rgba($color-success, 0.06);
+  color: $color-success;
+}
+
+.activityIconComment {
+  background: rgba($color-text-secondary, 0.06);
+  color: $color-text-secondary;
+}
+
+.activityContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.activityTitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: $color-text-primary;
+  margin: 0 0 2px;
+  @include text-ellipsis;
+}
+
+.activityDesc {
+  font-size: 0.6875rem;
+  color: $color-text-secondary;
+  margin: 0;
+}
+
+.activityDate {
+  font-size: 0.625rem;
+  color: $color-text-secondary;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 2px;
+  font-weight: 500;
+}
+
+// ── Manager card ─────────────────────────────────
+.managerInfo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.managerAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $color-primary-light, $color-info);
+  @include flex-center;
+  color: $color-text-white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba($color-primary, 0.15);
+}
+
+.managerDetails {
+  min-width: 0;
+}
+
+.managerName {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: $color-text-primary;
+  margin: 0;
+  @include text-ellipsis;
+}
+
+.managerPosition {
+  font-size: 0.6875rem;
+  color: $color-text-secondary;
+  margin: 0;
+}

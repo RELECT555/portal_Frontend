@@ -1,142 +1,398 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
+// ── Page ──────────────────────────────────────────
 .page {
   display: flex;
   flex-direction: column;
-  gap: $spacing-lg;
+  gap: 20px;
+  max-width: $content-max-width;
 }
 
-// Hero banner
-.hero {
+// ── Page header — soft gradient accent ────────────
+.pageHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: $spacing-lg;
-  padding: $spacing-xl $spacing-xl;
-  border-radius: $border-radius-card;
-  background: $color-bg-card;
-  border: 1px solid $color-divider;
-  box-shadow: $shadow-card;
-  position: relative;
-  overflow: hidden;
+  padding: 20px 24px 16px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba($color-primary, 0.04) 0%,
+    rgba($color-info, 0.03) 50%,
+    rgba($color-secondary, 0.02) 100%
+  );
+  border: 1px solid rgba($color-primary, 0.08);
 
   @media (max-width: $breakpoint-sm) {
     flex-direction: column;
     align-items: flex-start;
-    padding: $spacing-lg $spacing-md;
+    gap: 12px;
+    padding: 16px;
   }
 }
 
-.heroContent {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-}
-
-.heroTitle {
-  font-size: 1.75rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: $color-text-primary;
-  margin-bottom: $spacing-xs;
-}
-
-.heroSubtitle {
-  color: $color-text-secondary;
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  max-width: 520px;
-}
-
-.heroStats {
-  display: flex;
-  align-items: center;
-  gap: $spacing-lg;
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-
-  @media (max-width: $breakpoint-sm) {
-    gap: $spacing-md;
-    flex-wrap: wrap;
-  }
-}
-
-.heroStat {
+.pageHeaderLeft {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 2px;
 }
 
-.heroStatValue {
-  font-size: 1.5rem;
-  font-weight: 800;
+.pageTitle {
+  font-size: 1.625rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.pageSubtitle {
+  font-size: 0.8125rem;
+  color: $color-text-secondary;
+  line-height: 1.4;
+  margin: 0;
+  font-weight: 400;
+}
+
+.pageStats {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.pageStat {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.pageStatValue {
+  font-size: 1.125rem;
+  font-weight: 700;
   color: $color-primary;
   line-height: 1;
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-.heroStatLabel {
-  font-size: 0.7rem;
+.pageStatLabel {
+  font-size: 0.6875rem;
   color: $color-text-secondary;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-weight: 400;
 }
 
-// Toolbar: filters + search + create button
+// ── Toolbar ───────────────────────────────────────
 .toolbar {
   display: flex;
   align-items: center;
-  gap: $spacing-md;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-// macOS-style category pills
-.categoryPills {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  scrollbar-width: none;
+.toolbarSpacer {
+  flex: 1;
+  min-width: 8px;
 }
 
-.categoryPill {
+// ── Filter dropdown button — header nav style ──────
+.filterDropdownWrap {
+  position: relative;
+}
+
+.filterBtn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  font-family: inherit;
-  white-space: nowrap;
-  flex-shrink: 0;
-  border: 1px solid transparent;
+  gap: 6px;
+  padding: 8px 20px;
   border-radius: 20px;
-  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
   color: $color-text-secondary;
-  background: transparent;
-  user-select: none;
+  cursor: pointer;
   transition:
-    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+  white-space: nowrap;
+  border: 1px solid rgba($color-border, 0.5);
+  background: rgba($color-surface-subtle, 0.5);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  user-select: none;
+  line-height: 1.1;
+  font-family: inherit;
 
   &:hover {
     color: $color-text-primary;
-    background: rgba(0, 0, 0, 0.04);
-    border-color: $color-divider;
+    background: rgba($color-surface-subtle, 0.85);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &Active {
+    color: $color-primary;
+    font-weight: 600;
+    background: rgba($color-primary, 0.07);
+    border-color: rgba($color-primary, 0.18);
+    box-shadow:
+      0 1px 3px rgba($color-primary, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+    &:hover {
+      background: rgba($color-primary, 0.1);
+      border-color: rgba($color-primary, 0.25);
+      box-shadow:
+        0 2px 8px rgba($color-primary, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+  }
+}
+
+.filterBtnIcon {
+  font-size: 15px !important;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.filterBtnIconOpen {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.filterDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $color-primary;
+  margin-left: -2px;
+  flex-shrink: 0;
+}
+
+// Dropdown panel
+.filterDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  padding: 6px;
+  background: rgba($color-bg-card, 0.97);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid rgba($color-border, 0.5);
+  border-radius: $border-radius-lg;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  z-index: 200;
+  animation: filterDropdownIn 0.15s ease;
+}
+
+@keyframes filterDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filterSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.filterSectionLabel {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $color-text-secondary;
+  padding: 6px 10px 4px;
+  opacity: 0.6;
+}
+
+.filterDropdownItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: $border-radius-md;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: $color-text-secondary;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+  font-family: inherit;
+
+  &:hover {
+    color: $color-text-primary;
+    background: rgba($color-surface-subtle, 0.8);
+  }
+
+  &Active {
+    color: $color-primary;
+    font-weight: 600;
+    background: rgba($color-primary, 0.06);
+
+    &:hover {
+      background: rgba($color-primary, 0.1);
+      color: $color-primary;
+    }
+  }
+}
+
+.filterDropdownItemLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filterDropdownCount {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: $color-text-secondary;
+  opacity: 0.6;
+}
+
+.filterDropdownCheck {
+  font-size: 14px !important;
+  color: $color-primary;
+  flex-shrink: 0;
+}
+
+.filterDivider {
+  height: 1px;
+  background: rgba($color-border, 0.4);
+  margin: 4px 0;
+}
+
+.filterResetBtn {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: $border-radius-md;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: $color-text-secondary;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+  font-family: inherit;
+
+  &:hover {
+    color: $color-error;
+    background: rgba($color-error, 0.05);
+  }
+}
+
+// Active filter pills (shown in toolbar)
+.activeCategoryPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: $color-primary;
+  background: rgba($color-primary, 0.07);
+  border: 1px solid rgba($color-primary, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  animation: pillIn 0.15s ease;
+}
+
+@keyframes pillIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.activeCategoryClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: $color-primary;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+  font-family: inherit;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// Search
+.searchField {
+  width: 220px;
+  flex-shrink: 0;
+
+  @media (max-width: $breakpoint-sm) {
+    width: 100%;
+  }
+}
+
+// Create button — with subtle gradient
+.createButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  line-height: 1.1;
+
+  &:hover {
+    box-shadow: 0 2px 12px rgba($color-primary, 0.3);
+    filter: brightness(1.05);
   }
 
   &:active {
@@ -144,188 +400,7 @@
   }
 }
 
-.categoryPillActive {
-  font-weight: 600;
-  color: $color-primary;
-  background: rgba($color-primary, 0.08);
-  border-color: rgba($color-primary, 0.25);
-  backdrop-filter: blur(8px);
-  box-shadow:
-    0 0 0 0.5px rgba($color-primary, 0.12),
-    0 1px 3px rgba($color-primary, 0.08);
-
-  &:hover {
-    color: $color-primary;
-    background: rgba($color-primary, 0.1);
-    border-color: rgba($color-primary, 0.3);
-  }
-}
-
-.categoryPillLabel {
-  line-height: 1;
-}
-
-.categoryPillCount {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
-  font-size: 0.6rem;
-  font-weight: 700;
-  border-radius: 9px;
-  background: rgba(0, 0, 0, 0.05);
-  color: $color-text-secondary;
-  line-height: 1;
-}
-
-.categoryPillCountActive {
-  background: rgba($color-primary, 0.14);
-  color: $color-primary;
-}
-
-// macOS segmented control
-.segmentedControl {
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: 3px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid $color-divider;
-  gap: 0;
-}
-
-.segmentedIndicator {
-  position: absolute;
-  top: 3px;
-  height: calc(100% - 6px);
-  border-radius: 7px;
-  background: $color-bg-card;
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.1),
-    0 1px 2px rgba(0, 0, 0, 0.06),
-    0 0 0 0.5px rgba(0, 0, 0, 0.04);
-  transition:
-    left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 0;
-}
-
-.segmentedOption {
-  position: relative;
-  z-index: 1;
-  padding: 4px 12px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  font-family: inherit;
-  line-height: 1.5;
-  border: none;
-  cursor: pointer;
-  border-radius: 7px;
-  color: $color-text-secondary;
-  background: transparent;
-  user-select: none;
-  transition:
-    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    font-weight 0.15s ease;
-
-  &:hover {
-    color: $color-text-primary;
-  }
-
-  &:active {
-    transform: scale(0.96);
-  }
-}
-
-.segmentedOptionActive {
-  font-weight: 600;
-  color: $color-text-primary;
-}
-
-// macOS textured publish button
-.publishButton {
-  display: inline-flex;
-  flex-shrink: 0;
-  border-radius: 10px;
-  padding: 1px;
-  background: linear-gradient(
-    180deg,
-    rgba($color-primary, 0.7) 0%,
-    darken($color-primary, 8%) 100%
-  );
-  box-shadow:
-    0 0.5px 0 0 rgba(255, 255, 255, 0.1) inset,
-    0 1px 3px rgba(0, 0, 0, 0.12),
-    0 2px 6px rgba($color-primary, 0.2);
-  text-decoration: none;
-  transition:
-    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover {
-    box-shadow:
-      0 0.5px 0 0 rgba(255, 255, 255, 0.15) inset,
-      0 2px 8px rgba(0, 0, 0, 0.12),
-      0 4px 16px rgba($color-primary, 0.25);
-    transform: translateY(-0.5px);
-  }
-
-  &:active {
-    transform: translateY(0.5px) scale(0.98);
-    box-shadow:
-      0 0.5px 0 0 rgba(255, 255, 255, 0.05) inset,
-      0 1px 2px rgba(0, 0, 0, 0.15);
-  }
-}
-
-.publishButtonInner {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 16px;
-  border-radius: 9px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: #fff;
-  background: linear-gradient(
-    180deg,
-    lighten($color-primary, 4%) 0%,
-    $color-primary 50%,
-    darken($color-primary, 4%) 100%
-  );
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  transition: background 0.2s ease;
-
-  .publishButton:hover & {
-    background: linear-gradient(
-      180deg,
-      lighten($color-primary, 8%) 0%,
-      lighten($color-primary, 2%) 50%,
-      $color-primary 100%
-    );
-  }
-}
-
-.searchField {
-  width: 260px;
-  flex-shrink: 0;
-
-  @media (max-width: $breakpoint-sm) {
-    width: 100%;
-    order: -1;
-  }
-}
-
-.toolbarSpacer {
-  flex: 1;
-}
-
-// Grid
+// ── Grid ──────────────────────────────────────────
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

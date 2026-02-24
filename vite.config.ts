@@ -12,7 +12,7 @@ export default defineConfig({
       jpeg: { quality: 80 },
       webp: { quality: 80 },
       svg: {
-        plugins: [{ name: 'removeViewBox', active: false }, { name: 'removeDimensions' }],
+        multipass: true,
       },
     }),
     visualizer({

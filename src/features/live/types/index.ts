@@ -25,3 +25,25 @@ export const LIVE_CATEGORY_LABELS: Record<LiveCategory, string> = {
   volunteer: 'Волонтёрство',
   events: 'Мероприятия',
 };
+
+export type SortOption = 'recent' | 'popular' | 'discussed';
+
+export const SORT_LABELS: Record<SortOption, string> = {
+  recent: 'Новые',
+  popular: 'Популярные',
+  discussed: 'Обсуждаемые',
+};
+
+export const SORT_OPTIONS: [SortOption, string][] = Object.entries(SORT_LABELS) as [
+  SortOption,
+  string,
+][];
+
+export const CATEGORY_TABS: LiveCategory[] = [
+  'all',
+  'corporate',
+  'sport',
+  'creative',
+  'volunteer',
+  'events',
+];

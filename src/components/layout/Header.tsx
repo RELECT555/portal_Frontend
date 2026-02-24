@@ -229,7 +229,11 @@ export const Header: React.FC = () => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Профиль">
-            <IconButton size="small" className={styles.avatarBtn}>
+            <IconButton
+              size="small"
+              className={styles.avatarBtn}
+              onClick={() => navigate(ROUTES.PROFILE)}
+            >
               <Avatar
                 sx={{
                   width: 32,

@@ -16,6 +16,7 @@ export const ROUTES = {
   LIBRARY: '/library',
   POST_CONSTRUCTOR: '/constructor',
   POST_CONSTRUCTOR_EDIT: '/constructor/:id',
+  PROFILE: '/profile',
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
