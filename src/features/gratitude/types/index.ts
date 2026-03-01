@@ -11,6 +11,10 @@ export interface GratitudeStats {
   topEmployees: GratitudeTop[];
 }
 
+export interface GratitudeReactions {
+  [emoji: string]: number;
+}
+
 export interface GratitudeEntry {
   id: string;
   fromName: string;
@@ -18,4 +22,5 @@ export interface GratitudeEntry {
   toPosition: string;
   message: string;
   createdAt: string;
+  reactions?: GratitudeReactions;
 }

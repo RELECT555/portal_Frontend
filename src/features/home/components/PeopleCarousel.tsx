@@ -1,23 +1,14 @@
-import React, { useCallback, useMemo } from 'react';
-import { Card, CardContent, Typography, Box, Avatar } from '@mui/material';
+import React, { useMemo } from 'react';
+import { Typography, Box, Avatar } from '@mui/material';
 import { Cake, PersonAdd, EmojiEvents } from '@mui/icons-material';
 import { alpha } from '@mui/material/styles';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import type { BirthdayPerson, NewEmployee, AnniversaryPerson } from '@/features/birthdays/types';
 
 interface Props {
   birthdays: BirthdayPerson[];
   newEmployees: NewEmployee[];
   anniversaries: AnniversaryPerson[];
-}
-
-interface TabConfig {
-  key: string;
-  icon: React.ReactNode;
-  label: string;
-  count: number;
-  color: string;
-  gradient: string;
 }
 
 function getInitials(fullName: string): string {
@@ -29,7 +20,7 @@ function getInitials(fullName: string): string {
     .toUpperCase();
 }
 
-interface PersonCardProps {
+interface PersonItemProps {
   fullName: string;
   subtitle: string;
   avatarUrl?: string;
@@ -37,41 +28,38 @@ interface PersonCardProps {
   index: number;
 }
 
-const PersonCard: React.FC<PersonCardProps> = React.memo(
+const PersonItem: React.FC<PersonItemProps> = React.memo(
   ({ fullName, subtitle, avatarUrl, accentColor, index }) => (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -4 }}
-      transition={{ duration: 0.2, delay: index * 0.04 }}
+      transition={{ duration: 0.2, delay: index * 0.03 }}
     >
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: 1.5,
-          py: 1.25,
-          px: 1.5,
-          borderRadius: '10px',
-          transition: 'all 0.2s ease',
+          gap: 1.25,
+          py: 0.75,
+          px: 1,
+          borderRadius: 2,
+          transition: 'background 0.15s ease',
           cursor: 'pointer',
           '&:hover': {
-            background: alpha(accentColor, 0.04),
-            boxShadow: `0 0 0 1px ${alpha(accentColor, 0.08)}`,
+            bgcolor: 'rgba(0,0,0,0.02)',
           },
         }}
       >
         <Avatar
           src={avatarUrl}
           sx={{
-            width: 42,
-            height: 42,
-            fontSize: '0.85rem',
+            width: 32,
+            height: 32,
+            fontSize: '0.7rem',
             fontWeight: 600,
-            background: `linear-gradient(135deg, ${alpha(accentColor, 0.15)} 0%, ${alpha(accentColor, 0.08)} 100%)`,
+            bgcolor: alpha(accentColor, 0.08),
             color: accentColor,
-            border: '2px solid',
-            borderColor: alpha(accentColor, 0.12),
+            flexShrink: 0,
           }}
         >
           {getInitials(fullName)}
@@ -79,14 +67,14 @@ const PersonCard: React.FC<PersonCardProps> = React.memo(
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Typography
             variant="body2"
-            sx={{ fontWeight: 600, fontSize: '0.8125rem', lineHeight: 1.3 }}
+            sx={{ fontWeight: 600, fontSize: '0.78rem', lineHeight: 1.3 }}
             noWrap
           >
             {fullName}
           </Typography>
           <Typography
             variant="caption"
-            sx={{ color: 'text.secondary', fontSize: '0.6875rem', lineHeight: 1.3 }}
+            sx={{ color: 'text.disabled', fontSize: '0.675rem', lineHeight: 1.3 }}
             noWrap
           >
             {subtitle}
@@ -97,245 +85,178 @@ const PersonCard: React.FC<PersonCardProps> = React.memo(
   ),
 );
 
-export const PeopleCarousel: React.FC<Props> = React.memo(
-  ({ birthdays, newEmployees, anniversaries }) => {
-    const [activeTab, setActiveTab] = React.useState(0);
+interface ColumnProps {
+  icon: React.ReactNode;
+  label: string;
+  color: string;
+  count: number;
+  children: React.ReactNode;
+  emptyText: string;
+}
 
-    const tabData: TabConfig[] = useMemo(
-      () => [
-        {
-          key: 'birthdays',
-          icon: <Cake sx={{ fontSize: 15 }} />,
-          label: 'Дни рождения',
-          count: birthdays.length,
-          color: '#ec4899',
-          gradient: 'linear-gradient(135deg, #ec4899 0%, #f97316 100%)',
-        },
-        {
-          key: 'newEmployees',
-          icon: <PersonAdd sx={{ fontSize: 15 }} />,
-          label: 'Новые',
-          count: newEmployees.length,
-          color: '#0d9488',
-          gradient: 'linear-gradient(135deg, #0d9488 0%, #6366f1 100%)',
-        },
-        {
-          key: 'anniversaries',
-          icon: <EmojiEvents sx={{ fontSize: 15 }} />,
-          label: 'Юбилеи',
-          count: anniversaries.length,
-          color: '#f59e0b',
-          gradient: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
-        },
-      ],
-      [birthdays.length, newEmployees.length, anniversaries.length],
-    );
-
-    const currentTab = tabData[activeTab];
-
-    const handleTabClick = useCallback((idx: number) => {
-      setActiveTab(idx);
-    }, []);
-
-    return (
-      <Card
+const PeopleColumn: React.FC<ColumnProps> = React.memo(
+  ({ icon, label, color, count, children, emptyText }) => (
+    <Box sx={{ minWidth: 0, flex: 1 }}>
+      {/* Column header */}
+      <Box
         sx={{
-          height: '100%',
-          borderRadius: '14px',
-          border: '1px solid rgba(0,0,0,0.06)',
-          boxShadow: 'none',
-          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 0.75,
+          mb: 1.5,
+          pb: 1,
+          borderBottom: `1.5px solid ${alpha(color, 0.15)}`,
         }}
       >
-        <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
-          {/* Tabs */}
+        <Box
+          sx={{
+            width: 24,
+            height: 24,
+            borderRadius: 1.5,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            bgcolor: alpha(color, 0.08),
+            '& .MuiSvgIcon-root': { fontSize: 14, color },
+          }}
+        >
+          {icon}
+        </Box>
+        <Typography
+          variant="caption"
+          sx={{ fontWeight: 600, fontSize: '0.75rem', color: 'text.primary' }}
+        >
+          {label}
+        </Typography>
+        {count > 0 && (
           <Box
             sx={{
-              display: 'flex',
-              gap: '4px',
-              p: '3px',
-              borderRadius: '10px',
-              bgcolor: 'rgba(0,0,0,0.04)',
-              mb: 2,
+              ml: 'auto',
+              fontSize: '0.625rem',
+              fontWeight: 700,
+              color,
+              bgcolor: alpha(color, 0.08),
+              borderRadius: 1,
+              px: 0.75,
+              py: 0.125,
+              lineHeight: 1.5,
             }}
           >
-            {tabData.map((tab, idx) => {
-              const isActive = activeTab === idx;
-              return (
-                <Box
-                  key={tab.key}
-                  component="button"
-                  onClick={() => handleTabClick(idx)}
-                  sx={{
-                    flex: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 0.5,
-                    py: 0.75,
-                    px: 1,
-                    border: 'none',
-                    borderRadius: '8px',
-                    fontSize: '0.6875rem',
-                    fontWeight: isActive ? 600 : 500,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    background: isActive ? '#fff' : 'transparent',
-                    color: isActive ? tab.color : 'text.secondary',
-                    boxShadow: isActive
-                      ? `0 1px 4px rgba(0,0,0,0.08), 0 0 8px ${alpha(tab.color, 0.08)}`
-                      : 'none',
-                    '&:hover': {
-                      color: tab.color,
-                    },
-                  }}
-                >
-                  {tab.icon}
-                  <span>{tab.label}</span>
-                  {tab.count > 0 && (
-                    <Box
-                      component="span"
-                      sx={{
-                        minWidth: 16,
-                        height: 16,
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: '4px',
-                        fontSize: '0.5625rem',
-                        fontWeight: 700,
-                        px: 0.5,
-                        background: isActive ? alpha(tab.color, 0.1) : 'rgba(0,0,0,0.06)',
-                        color: isActive ? tab.color : 'text.secondary',
-                      }}
-                    >
-                      {tab.count}
-                    </Box>
-                  )}
-                </Box>
-              );
-            })}
+            {count}
           </Box>
+        )}
+      </Box>
 
-          {/* Content */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentTab.key}
-              initial={{ opacity: 0, x: 8 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -8 }}
-              transition={{ duration: 0.15 }}
-            >
-              {activeTab === 0 && (
-                <>
-                  {birthdays.length === 0 ? (
-                    <EmptyMessage icon={<Cake />} text="Нет именинников" color={currentTab.color} />
-                  ) : (
-                    birthdays.map((person, i) => (
-                      <PersonCard
-                        key={person.id}
-                        fullName={person.fullName}
-                        subtitle={`${person.position} · ${person.date}`}
-                        avatarUrl={person.avatarUrl}
-                        accentColor={currentTab.color}
-                        index={i}
-                      />
-                    ))
-                  )}
-                </>
-              )}
+      {/* Items */}
+      {count === 0 ? (
+        <Typography variant="caption" sx={{ color: 'text.disabled', fontSize: '0.725rem', px: 1 }}>
+          {emptyText}
+        </Typography>
+      ) : (
+        children
+      )}
+    </Box>
+  ),
+);
 
-              {activeTab === 1 && (
-                <>
-                  {newEmployees.length === 0 ? (
-                    <EmptyMessage
-                      icon={<PersonAdd />}
-                      text="Нет новых сотрудников"
-                      color={currentTab.color}
-                    />
-                  ) : (
-                    newEmployees.map((person, i) => (
-                      <PersonCard
-                        key={person.id}
-                        fullName={person.fullName}
-                        subtitle={`${person.position} · ${person.hireDate}`}
-                        avatarUrl={person.avatarUrl}
-                        accentColor={currentTab.color}
-                        index={i}
-                      />
-                    ))
-                  )}
-                </>
-              )}
+export const PeopleCarousel: React.FC<Props> = React.memo(
+  ({ birthdays, newEmployees, anniversaries }) => {
+    const colors = useMemo(
+      () => ({
+        birthdays: '#ec4899',
+        newEmployees: '#0d9488',
+        anniversaries: '#f59e0b',
+      }),
+      [],
+    );
 
-              {activeTab === 2 && (
-                <>
-                  {anniversaries.length === 0 ? (
-                    <EmptyMessage
-                      icon={<EmojiEvents />}
-                      text="Нет юбиляров"
-                      color={currentTab.color}
-                    />
-                  ) : (
-                    anniversaries.map((person, i) => (
-                      <PersonCard
-                        key={person.id}
-                        fullName={person.fullName}
-                        subtitle={`${person.position} · ${person.years} лет в компании`}
-                        avatarUrl={person.avatarUrl}
-                        accentColor={currentTab.color}
-                        index={i}
-                      />
-                    ))
-                  )}
-                </>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </CardContent>
-      </Card>
+    return (
+      <Box
+        sx={{
+          height: '100%',
+          borderRadius: 3,
+          border: '1px solid rgba(0,0,0,0.06)',
+          bgcolor: 'rgba(255,255,255,0.8)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          overflow: 'hidden',
+          p: 2.5,
+        }}
+      >
+        {/* Three columns */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 2,
+            height: '100%',
+          }}
+        >
+          {/* Birthdays */}
+          <PeopleColumn
+            icon={<Cake />}
+            label="Дни рождения"
+            color={colors.birthdays}
+            count={birthdays.length}
+            emptyText="Нет именинников"
+          >
+            {birthdays.map((person, i) => (
+              <PersonItem
+                key={person.id}
+                fullName={person.fullName}
+                subtitle={`${person.position} · ${person.date}`}
+                avatarUrl={person.avatarUrl}
+                accentColor={colors.birthdays}
+                index={i}
+              />
+            ))}
+          </PeopleColumn>
+
+          {/* New employees */}
+          <PeopleColumn
+            icon={<PersonAdd />}
+            label="Новые сотрудники"
+            color={colors.newEmployees}
+            count={newEmployees.length}
+            emptyText="Нет новых сотрудников"
+          >
+            {newEmployees.map((person, i) => (
+              <PersonItem
+                key={person.id}
+                fullName={person.fullName}
+                subtitle={`${person.position} · ${person.hireDate}`}
+                avatarUrl={person.avatarUrl}
+                accentColor={colors.newEmployees}
+                index={i}
+              />
+            ))}
+          </PeopleColumn>
+
+          {/* Anniversaries */}
+          <PeopleColumn
+            icon={<EmojiEvents />}
+            label="Юбилеи"
+            color={colors.anniversaries}
+            count={anniversaries.length}
+            emptyText="Нет юбиляров"
+          >
+            {anniversaries.map((person, i) => (
+              <PersonItem
+                key={person.id}
+                fullName={person.fullName}
+                subtitle={`${person.position} · ${person.years} лет`}
+                avatarUrl={person.avatarUrl}
+                accentColor={colors.anniversaries}
+                index={i}
+              />
+            ))}
+          </PeopleColumn>
+        </Box>
+      </Box>
     );
   },
 );
 
-interface EmptyMessageProps {
-  icon: React.ReactNode;
-  text: string;
-  color: string;
-}
-
-const EmptyMessage: React.FC<EmptyMessageProps> = ({ icon, text, color }) => (
-  <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      py: 4,
-      gap: 1,
-    }}
-  >
-    <Box
-      sx={{
-        width: 40,
-        height: 40,
-        borderRadius: '10px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: `linear-gradient(135deg, ${alpha(color, 0.08)} 0%, ${alpha(color, 0.04)} 100%)`,
-        color: alpha(color, 0.3),
-        '& .MuiSvgIcon-root': { fontSize: 20 },
-      }}
-    >
-      {icon}
-    </Box>
-    <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8125rem' }}>
-      {text}
-    </Typography>
-  </Box>
-);
-
-PersonCard.displayName = 'PersonCard';
+PersonItem.displayName = 'PersonItem';
+PeopleColumn.displayName = 'PeopleColumn';
 PeopleCarousel.displayName = 'PeopleCarousel';
-EmptyMessage.displayName = 'EmptyMessage';

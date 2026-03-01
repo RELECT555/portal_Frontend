@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  Avatar,
-  Button,
-  TextField,
-  Autocomplete,
-} from '@mui/material';
+import { Box, Typography, Avatar, Button, TextField, Autocomplete, Tooltip } from '@mui/material';
 import { alpha, keyframes } from '@mui/material/styles';
 import {
   FavoriteRounded,
@@ -22,6 +13,8 @@ import {
 import type { GratitudeEntry } from './types';
 import styles from './GratitudePage.module.scss';
 
+const REACTION_EMOJIS = ['❤️', '👏', '🔥', '🙌', '⭐'];
+
 const MOCK_FEED: GratitudeEntry[] = [
   {
     id: '1',
@@ -30,6 +23,7 @@ const MOCK_FEED: GratitudeEntry[] = [
     toPosition: 'Системный аналитик',
     message: 'Огромное спасибо за помощь с аналитикой по проекту — всё чётко и в срок!',
     createdAt: '2026-02-19',
+    reactions: { '❤️': 5, '👏': 3 },
   },
   {
     id: '2',
@@ -38,6 +32,7 @@ const MOCK_FEED: GratitudeEntry[] = [
     toPosition: 'Специалист',
     message: 'Лена, спасибо что всегда готова помочь и объяснить — ты настоящий командный игрок.',
     createdAt: '2026-02-18',
+    reactions: { '🔥': 2, '🙌': 4, '❤️': 1 },
   },
   {
     id: '3',
@@ -46,6 +41,7 @@ const MOCK_FEED: GratitudeEntry[] = [
     toPosition: 'Клиент-менеджер',
     message: 'Дарья, благодарю за отличную работу с клиентами — получила очень хорошие отзывы.',
     createdAt: '2026-02-18',
+    reactions: { '⭐': 6 },
   },
   {
     id: '4',
@@ -54,6 +50,7 @@ const MOCK_FEED: GratitudeEntry[] = [
     toPosition: 'Системный администратор',
     message: 'Коля, спасибо за оперативное решение проблемы с сервером — спас весь отдел!',
     createdAt: '2026-02-17',
+    reactions: { '🔥': 8, '👏': 3, '❤️': 2 },
   },
   {
     id: '5',
@@ -62,15 +59,17 @@ const MOCK_FEED: GratitudeEntry[] = [
     toPosition: 'Менеджер интернет-продаж',
     message: 'Сергей, спасибо за помощь с обучением — очень доступно и терпеливо объяснил.',
     createdAt: '2026-02-17',
+    reactions: { '❤️': 3, '🙌': 1 },
   },
 ];
 
 const TOTAL = 1168;
 const WEEKLY_COUNT = 42;
 const MONTHLY_COUNT = 187;
+
 const pulseHeart = keyframes`
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  50% { transform: scale(1.1); }
 `;
 
 const MOCK_EMPLOYEE_NAMES = [
@@ -96,118 +95,225 @@ function formatDate(iso: string): string {
 
 interface FeedCardProps {
   entry: GratitudeEntry;
+  reactions: Record<string, number>;
+  activeReactions: Set<string>;
+  onReact: (emoji: string) => void;
 }
 
-const FeedCard: React.FC<FeedCardProps> = ({ entry }) => (
-  <Card
-    sx={{
-      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      position: 'relative',
-      overflow: 'visible',
-      '&:hover': {
-        transform: 'translateY(-4px)',
-        boxShadow: (theme) => `0 16px 40px -12px ${alpha(theme.palette.error.main, 0.2)}`,
-        borderColor: (theme) => alpha(theme.palette.error.main, 0.2),
-      },
-    }}
-  >
+const FeedCard: React.FC<FeedCardProps> = ({ entry, reactions, activeReactions, onReact }) => {
+  const [pickerOpen, setPickerOpen] = useState(false);
+  return (
     <Box
       sx={{
-        position: 'absolute',
-        top: -1,
-        left: 24,
-        right: 24,
-        height: 3,
-        borderRadius: '0 0 4px 4px',
-        background: (theme) =>
-          `linear-gradient(90deg, ${alpha(theme.palette.error.light, 0.4)}, ${alpha(theme.palette.error.main, 0.6)}, ${alpha(theme.palette.error.light, 0.4)})`,
+        borderRadius: 3,
+        bgcolor: '#fff',
+        border: '1px solid',
+        borderColor: 'rgba(0,0,0,0.06)',
+        transition: 'all 0.25s ease',
+        overflow: 'hidden',
+        '&:hover': {
+          transform: 'translateY(-2px)',
+          boxShadow: `0 8px 28px -8px ${alpha('#ef4444', 0.12)}, 0 2px 8px -2px rgba(0,0,0,0.06)`,
+          borderColor: alpha('#ef4444', 0.15),
+        },
       }}
-    />
-
-    <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        <Box sx={{ pt: 0.5 }}>
-          <Avatar
+    >
+      <Box sx={{ p: 2.5 }}>
+        {/* Quote bubble */}
+        <Box
+          sx={{
+            bgcolor: alpha('#ef4444', 0.03),
+            borderRadius: 2.5,
+            px: 2.5,
+            py: 2,
+            mb: 2,
+            position: 'relative',
+            borderLeft: `2px solid ${alpha('#ef4444', 0.15)}`,
+          }}
+        >
+          <FormatQuote
             sx={{
-              width: 48,
-              height: 48,
-              bgcolor: (theme) => alpha(theme.palette.error.main, 0.1),
-              color: 'error.main',
-              fontSize: '0.85rem',
-              fontWeight: 700,
-              flexShrink: 0,
+              fontSize: 28,
+              color: alpha('#ef4444', 0.1),
+              position: 'absolute',
+              top: 6,
+              right: 10,
+              transform: 'rotate(180deg)',
             }}
-          >
-            {getInitials(entry.fromName)}
-          </Avatar>
-        </Box>
-
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Box
+          />
+          <Typography
+            variant="body2"
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 1,
-              mb: 0.5,
-            }}
-          >
-            <Typography variant="body2" fontWeight={700}>
-              {entry.fromName}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.disabled"
-              sx={{ flexShrink: 0, fontSize: '0.7rem' }}
-            >
-              {formatDate(entry.createdAt)}
-            </Typography>
-          </Box>
-
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 1,
-              alignItems: 'flex-start',
-              bgcolor: (theme) => alpha(theme.palette.error.main, 0.03),
-              borderRadius: 3,
-              p: 2,
+              lineHeight: 1.7,
+              color: 'text.primary',
+              fontSize: '0.875rem',
               position: 'relative',
             }}
           >
-            <FormatQuote
-              sx={{
-                fontSize: 32,
-                color: (theme) => alpha(theme.palette.error.main, 0.15),
-                position: 'absolute',
-                top: 4,
-                left: 8,
-                transform: 'rotate(180deg)',
-              }}
-            />
-            <Typography
-              variant="body2"
-              color="text.primary"
-              sx={{ lineHeight: 1.7, pl: 3, fontStyle: 'italic' }}
-            >
-              {entry.message}
-            </Typography>
-          </Box>
+            {entry.message}
+          </Typography>
+        </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mt: 1.5 }}>
-            <VolunteerActivism sx={{ fontSize: 14, color: 'error.light' }} />
-            <Typography variant="caption" color="text.secondary" fontWeight={500}>
-              для {entry.toName}
-            </Typography>
-            <Typography variant="caption" color="text.disabled">
-              · {entry.toPosition}
-            </Typography>
+        {/* Reactions row */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 2, flexWrap: 'wrap' }}>
+          {Object.entries(reactions).map(([emoji, count]) => (
+            <Box
+              key={emoji}
+              onClick={() => onReact(emoji)}
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 0.5,
+                px: 1,
+                py: 0.375,
+                borderRadius: 2,
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+                userSelect: 'none',
+                bgcolor: activeReactions.has(emoji) ? alpha('#ef4444', 0.1) : 'rgba(0,0,0,0.03)',
+                border: '1px solid',
+                borderColor: activeReactions.has(emoji) ? alpha('#ef4444', 0.25) : 'transparent',
+                transition: 'all 0.15s ease',
+                '&:hover': {
+                  bgcolor: activeReactions.has(emoji) ? alpha('#ef4444', 0.14) : 'rgba(0,0,0,0.06)',
+                },
+                '&:active': { transform: 'scale(0.95)' },
+              }}
+            >
+              <span style={{ fontSize: '0.8rem', lineHeight: 1 }}>{emoji}</span>
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: '0.7rem',
+                  fontWeight: activeReactions.has(emoji) ? 600 : 500,
+                  color: activeReactions.has(emoji) ? '#ef4444' : 'text.secondary',
+                  lineHeight: 1,
+                }}
+              >
+                {count}
+              </Typography>
+            </Box>
+          ))}
+
+          {/* Add reaction button */}
+          <Box sx={{ position: 'relative' }}>
+            <Tooltip title="Добавить реакцию" arrow>
+              <Box
+                onClick={() => setPickerOpen((v) => !v)}
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 28,
+                  height: 26,
+                  borderRadius: 2,
+                  cursor: 'pointer',
+                  bgcolor: pickerOpen ? 'rgba(0,0,0,0.06)' : 'transparent',
+                  color: 'text.disabled',
+                  fontSize: '0.85rem',
+                  transition: 'all 0.15s ease',
+                  '&:hover': { bgcolor: 'rgba(0,0,0,0.05)' },
+                }}
+              >
+                +
+              </Box>
+            </Tooltip>
+
+            {/* Emoji picker */}
+            {pickerOpen && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: '100%',
+                  left: 0,
+                  mb: 0.5,
+                  display: 'flex',
+                  gap: 0.25,
+                  bgcolor: '#fff',
+                  borderRadius: 2.5,
+                  px: 0.75,
+                  py: 0.5,
+                  boxShadow: '0 4px 20px -4px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.06)',
+                  zIndex: 10,
+                }}
+              >
+                {REACTION_EMOJIS.map((emoji) => (
+                  <Box
+                    key={emoji}
+                    onClick={() => {
+                      onReact(emoji);
+                      setPickerOpen(false);
+                    }}
+                    sx={{
+                      width: 30,
+                      height: 30,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 1.5,
+                      cursor: 'pointer',
+                      fontSize: '1rem',
+                      transition: 'all 0.12s ease',
+                      '&:hover': {
+                        bgcolor: 'rgba(0,0,0,0.05)',
+                        transform: 'scale(1.2)',
+                      },
+                      '&:active': { transform: 'scale(0.9)' },
+                    }}
+                  >
+                    {emoji}
+                  </Box>
+                ))}
+              </Box>
+            )}
           </Box>
         </Box>
+
+        {/* Author row */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Avatar
+              sx={{
+                width: 34,
+                height: 34,
+                bgcolor: alpha('#ef4444', 0.08),
+                color: '#ef4444',
+                fontSize: '0.7rem',
+                fontWeight: 700,
+              }}
+            >
+              {getInitials(entry.fromName)}
+            </Avatar>
+            <Box>
+              <Typography
+                variant="caption"
+                fontWeight={600}
+                sx={{ display: 'block', lineHeight: 1.3 }}
+              >
+                {entry.fromName}
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <VolunteerActivism sx={{ fontSize: 11, color: alpha('#ef4444', 0.5) }} />
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'text.disabled', fontSize: '0.675rem', lineHeight: 1.2 }}
+                >
+                  {entry.toName} · {entry.toPosition}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+          <Typography
+            variant="caption"
+            sx={{ color: 'text.disabled', fontSize: '0.675rem', flexShrink: 0, ml: 1 }}
+          >
+            {formatDate(entry.createdAt)}
+          </Typography>
+        </Box>
       </Box>
-    </CardContent>
-  </Card>
-);
+    </Box>
+  );
+};
 
 interface StatBoxProps {
   icon: React.ReactNode;
@@ -221,28 +327,30 @@ const StatBox: React.FC<StatBoxProps> = ({ icon, value, label, color }) => (
     sx={{
       display: 'flex',
       alignItems: 'center',
-      gap: 2,
-      px: 3,
+      gap: 1.5,
+      px: 2.5,
       py: 2,
       borderRadius: 3,
-      bgcolor: (theme) => alpha(theme.palette[color as 'error' | 'warning' | 'success'].main, 0.06),
+      bgcolor: 'rgba(255,255,255,0.65)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+      border: '1px solid',
+      borderColor: alpha(color, 0.1),
       flex: 1,
       minWidth: 160,
-      transition: 'all 0.2s',
+      transition: 'all 0.2s ease',
       '&:hover': {
-        bgcolor: (theme) =>
-          alpha(theme.palette[color as 'error' | 'warning' | 'success'].main, 0.1),
-        transform: 'translateY(-2px)',
+        bgcolor: 'rgba(255,255,255,0.85)',
+        boxShadow: `0 4px 16px -4px ${alpha(color, 0.12)}`,
       },
     }}
   >
     <Box
       sx={{
-        width: 44,
-        height: 44,
-        borderRadius: '50%',
-        bgcolor: (theme) =>
-          alpha(theme.palette[color as 'error' | 'warning' | 'success'].main, 0.12),
+        width: 40,
+        height: 40,
+        borderRadius: 2.5,
+        bgcolor: alpha(color, 0.08),
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -252,10 +360,13 @@ const StatBox: React.FC<StatBoxProps> = ({ icon, value, label, color }) => (
       {icon}
     </Box>
     <Box>
-      <Typography variant="h3" fontWeight={800} color={`${color}.main`} sx={{ lineHeight: 1 }}>
+      <Typography variant="h4" fontWeight={700} sx={{ lineHeight: 1, color }}>
         {typeof value === 'number' ? value.toLocaleString('ru-RU') : value}
       </Typography>
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.25, display: 'block' }}>
+      <Typography
+        variant="caption"
+        sx={{ color: 'text.secondary', mt: 0.25, display: 'block', fontSize: '0.7rem' }}
+      >
         {label}
       </Typography>
     </Box>
@@ -265,15 +376,62 @@ const StatBox: React.FC<StatBoxProps> = ({ icon, value, label, color }) => (
 const GratitudePage: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  // Reactions state: { entryId: { emoji: count } }
+  const [reactionsMap, setReactionsMap] = useState<Record<string, Record<string, number>>>(() => {
+    const init: Record<string, Record<string, number>> = {};
+    MOCK_FEED.forEach((e) => {
+      init[e.id] = { ...(e.reactions ?? {}) };
+    });
+    return init;
+  });
+
+  // Track which emojis the current user toggled
+  const [myReactions, setMyReactions] = useState<Record<string, Set<string>>>(() => {
+    const init: Record<string, Set<string>> = {};
+    MOCK_FEED.forEach((e) => {
+      init[e.id] = new Set();
+    });
+    return init;
+  });
+
+  const handleReact = (entryId: string, emoji: string): void => {
+    setReactionsMap((prev) => {
+      const entry = { ...prev[entryId] };
+      const isActive = myReactions[entryId]?.has(emoji);
+      if (isActive) {
+        entry[emoji] = Math.max((entry[emoji] ?? 1) - 1, 0);
+        if (entry[emoji] === 0) delete entry[emoji];
+      } else {
+        entry[emoji] = (entry[emoji] ?? 0) + 1;
+      }
+      return { ...prev, [entryId]: entry };
+    });
+
+    setMyReactions((prev) => {
+      const set = new Set(prev[entryId]);
+      if (set.has(emoji)) {
+        set.delete(emoji);
+      } else {
+        set.add(emoji);
+      }
+      return { ...prev, [entryId]: set };
+    });
+  };
+
+  const leftColumn = MOCK_FEED.filter((_, i) => i % 2 === 0);
+  const rightColumn = MOCK_FEED.filter((_, i) => i % 2 === 1);
+
   return (
     <Box>
+      {/* ─── Header ─── */}
       <Box
         sx={{
-          background: (theme) =>
-            `linear-gradient(135deg, ${alpha(theme.palette.error.main, 0.04)} 0%, ${alpha(theme.palette.warning.main, 0.04)} 50%, ${alpha(theme.palette.error.light, 0.02)} 100%)`,
-          borderRadius: 5,
-          p: { xs: 2.5, md: 4 },
+          borderRadius: 4,
+          p: { xs: 2.5, md: 3.5 },
           mb: 3,
+          background: `linear-gradient(135deg, ${alpha('#ef4444', 0.03)} 0%, ${alpha('#f59e0b', 0.03)} 100%)`,
+          border: '1px solid',
+          borderColor: alpha('#ef4444', 0.06),
         }}
       >
         <Box
@@ -281,7 +439,7 @@ const GratitudePage: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            mb: 3,
+            mb: 2.5,
             flexWrap: 'wrap',
             gap: 2,
           }}
@@ -289,27 +447,25 @@ const GratitudePage: React.FC = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <Box
               sx={{
-                width: 48,
-                height: 48,
-                borderRadius: '50%',
-                background: (theme) =>
-                  `linear-gradient(135deg, ${theme.palette.error.light}, ${theme.palette.error.main})`,
+                width: 44,
+                height: 44,
+                borderRadius: 2.5,
+                background: `linear-gradient(135deg, ${alpha('#ef4444', 0.1)}, ${alpha('#ef4444', 0.16)})`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: (theme) => `0 4px 16px ${alpha(theme.palette.error.main, 0.3)}`,
               }}
             >
               <FavoriteRounded
                 sx={{
-                  fontSize: 24,
-                  color: '#fff',
-                  animation: `${pulseHeart} 2s ease-in-out infinite`,
+                  fontSize: 22,
+                  color: '#ef4444',
+                  animation: `${pulseHeart} 2.5s ease-in-out infinite`,
                 }}
               />
             </Box>
             <Box>
-              <Typography variant="h2" fontWeight={800}>
+              <Typography variant="h3" fontWeight={700} sx={{ letterSpacing: '-0.01em' }}>
                 Благодарности
               </Typography>
               <Typography variant="caption" color="text.secondary">
@@ -320,20 +476,22 @@ const GratitudePage: React.FC = () => {
 
           <Button
             variant="contained"
-            color="error"
+            disableElevation
             startIcon={<VolunteerActivism sx={{ fontSize: 18 }} />}
             onClick={() => setDialogOpen(true)}
             sx={{
-              fontWeight: 700,
-              px: 3,
-              py: 1.25,
-              borderRadius: 3,
-              background: (theme) =>
-                `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`,
-              boxShadow: (theme) => `0 4px 20px ${alpha(theme.palette.error.main, 0.35)}`,
+              fontWeight: 600,
+              px: 2.5,
+              py: 1,
+              borderRadius: 2.5,
+              fontSize: '0.8125rem',
+              bgcolor: '#ef4444',
+              color: '#fff',
+              textTransform: 'none',
+              transition: 'all 0.2s ease',
               '&:hover': {
-                boxShadow: (theme) => `0 6px 24px ${alpha(theme.palette.error.main, 0.45)}`,
-                transform: 'translateY(-2px)',
+                bgcolor: '#dc2626',
+                boxShadow: `0 4px 14px -2px ${alpha('#ef4444', 0.4)}`,
               },
             }}
           >
@@ -341,53 +499,83 @@ const GratitudePage: React.FC = () => {
           </Button>
         </Box>
 
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 2,
-            flexWrap: 'wrap',
-          }}
-        >
+        {/* Stats */}
+        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
           <StatBox
-            icon={<FavoriteRounded sx={{ fontSize: 22, color: 'error.main' }} />}
+            icon={<FavoriteRounded sx={{ fontSize: 20, color: '#ef4444' }} />}
             value={TOTAL}
             label="всего «спасибо»"
-            color="error"
+            color="#ef4444"
           />
           <StatBox
-            icon={<TrendingUp sx={{ fontSize: 22, color: 'success.main' }} />}
+            icon={<TrendingUp sx={{ fontSize: 20, color: '#10b981' }} />}
             value={WEEKLY_COUNT}
             label="на этой неделе"
-            color="success"
+            color="#10b981"
           />
           <StatBox
-            icon={<WorkspacePremium sx={{ fontSize: 22, color: 'warning.main' }} />}
+            icon={<WorkspacePremium sx={{ fontSize: 20, color: '#f59e0b' }} />}
             value={MONTHLY_COUNT}
             label="за месяц"
-            color="warning"
+            color="#f59e0b"
           />
         </Box>
       </Box>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+      {/* ─── Feed title ─── */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
         <FormatQuote
           sx={{
-            fontSize: 28,
-            color: (theme) => alpha(theme.palette.error.main, 0.3),
+            fontSize: 22,
+            color: alpha('#ef4444', 0.35),
             transform: 'rotate(180deg)',
           }}
         />
-        <Typography variant="h4" fontWeight={800}>
+        <Typography
+          variant="body2"
+          fontWeight={600}
+          color="text.secondary"
+          sx={{ textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.7rem' }}
+        >
           Лента благодарностей
         </Typography>
       </Box>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-        {MOCK_FEED.map((entry) => (
-          <FeedCard key={entry.id} entry={entry} />
-        ))}
+      {/* ─── Masonry 2-column grid ─── */}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+          gap: 2,
+          alignItems: 'start',
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {leftColumn.map((entry) => (
+            <FeedCard
+              key={entry.id}
+              entry={entry}
+              reactions={reactionsMap[entry.id] ?? {}}
+              activeReactions={myReactions[entry.id] ?? new Set()}
+              onReact={(emoji) => handleReact(entry.id, emoji)}
+            />
+          ))}
+        </Box>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: { md: 3 } }}>
+          {rightColumn.map((entry) => (
+            <FeedCard
+              key={entry.id}
+              entry={entry}
+              reactions={reactionsMap[entry.id] ?? {}}
+              activeReactions={myReactions[entry.id] ?? new Set()}
+              onReact={(emoji) => handleReact(entry.id, emoji)}
+            />
+          ))}
+        </Box>
       </Box>
 
+      {/* ─── Modal ─── */}
       {dialogOpen && (
         <div
           className={styles.modalOverlay}

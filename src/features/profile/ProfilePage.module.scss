@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
@@ -777,7 +778,7 @@ $ach-legendary: #f59e0b;
 
   &.achRarity_legendary {
     background: rgba($ach-legendary, 0.08);
-    color: darken($ach-legendary, 8%);
+    color: color.adjust($ach-legendary, $lightness: -8%);
   }
 }
 
@@ -809,16 +810,20 @@ $ach-legendary: #f59e0b;
   transition: width 0.5s ease;
 
   &.achRarity_common {
-    background: linear-gradient(90deg, lighten($ach-common, 10%), $ach-common);
+    background: linear-gradient(90deg, color.adjust($ach-common, $lightness: 10%), $ach-common);
   }
   &.achRarity_rare {
-    background: linear-gradient(90deg, lighten($ach-rare, 10%), $ach-rare);
+    background: linear-gradient(90deg, color.adjust($ach-rare, $lightness: 10%), $ach-rare);
   }
   &.achRarity_epic {
-    background: linear-gradient(90deg, lighten($ach-epic, 10%), $ach-epic);
+    background: linear-gradient(90deg, color.adjust($ach-epic, $lightness: 10%), $ach-epic);
   }
   &.achRarity_legendary {
-    background: linear-gradient(90deg, lighten($ach-legendary, 10%), $ach-legendary);
+    background: linear-gradient(
+      90deg,
+      color.adjust($ach-legendary, $lightness: 10%),
+      $ach-legendary
+    );
   }
 }
 
