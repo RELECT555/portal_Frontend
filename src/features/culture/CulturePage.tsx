@@ -1,8 +1,5 @@
 import React, { useMemo } from 'react';
-import { Breadcrumbs, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { NavigateNext as ChevronIcon } from '@mui/icons-material';
-import { ROUTES } from '@/lib/constants';
+import { Breadcrumbs } from '@/components/shared';
 import { CultureCardComponent } from './components';
 import { CULTURE_SECTIONS } from './cultureData';
 import styles from './CulturePage.module.scss';
@@ -19,20 +16,7 @@ const CulturePage: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <Breadcrumbs separator={<ChevronIcon fontSize="small" />} sx={{ mb: 2 }}>
-        <Typography
-          component={Link}
-          to={ROUTES.HOME}
-          variant="body2"
-          color="primary"
-          sx={{ '&:hover': { textDecoration: 'underline' } }}
-        >
-          Главная
-        </Typography>
-        <Typography variant="body2" color="primary" fontWeight={500}>
-          Корпоративная культура
-        </Typography>
-      </Breadcrumbs>
+      <Breadcrumbs items={[{ label: 'Корпоративная культура' }]} />
 
       <div className={styles.pageHeader}>
         <h1 className={styles.title}>Корпоративная культура</h1>

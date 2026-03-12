@@ -1,0 +1,402 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+@use '../../styles/shared-page' as *;
+
+// ── Bento Category Grid ──────────────────────────
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.categoryCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: $color-bg-card;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  &:hover {
+    box-shadow:
+      0 6px 24px rgba(0, 0, 0, 0.06),
+      0 0 0 1px rgba($color-primary, 0.08);
+    transform: translateY(-2px);
+
+    &::before {
+      opacity: 1;
+    }
+
+    .categoryCardIcon {
+      transform: scale(1.1);
+    }
+
+    .categoryCardArrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &Active {
+    border-color: rgba($color-primary, 0.2);
+    background: rgba($color-primary, 0.02);
+    box-shadow: 0 0 0 1px rgba($color-primary, 0.12);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+.categoryCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.categoryCardIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  @include flex-center;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.categoryCardCount {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: $color-text-secondary;
+  background: rgba($color-surface-subtle, 0.8);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.categoryCardLabel {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: $color-text-primary;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.categoryCardDescription {
+  font-size: 0.75rem;
+  color: $color-text-secondary;
+  line-height: 1.45;
+  @include line-clamp(2);
+}
+
+.categoryCardArrow {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.25s ease;
+  color: $color-text-secondary;
+}
+
+// ── Section divider ──────────────────────────────
+.sectionDivider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sectionDividerLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba($color-primary, 0.08) 0%,
+    rgba(0, 0, 0, 0.04) 50%,
+    rgba($color-primary, 0.08) 100%
+  );
+}
+
+.sectionDividerLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+// ── Document list ────────────────────────────────
+.documentList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.documentCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: $color-bg-card;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.05),
+      0 0 0 1px rgba($color-primary, 0.08);
+    transform: translateY(-1px);
+
+    .documentTitle {
+      color: $color-primary;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+.documentCardPinned {
+  border-left: 3px solid $color-primary;
+}
+
+.documentFileIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  @include flex-center;
+  flex-shrink: 0;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #fff;
+}
+
+.documentBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.documentTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.documentTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: $color-text-primary;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+  @include text-ellipsis;
+}
+
+.documentNewBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba($color-primary, 0.9);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  color: $color-text-white;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.documentPinBadge {
+  flex-shrink: 0;
+  color: $color-primary;
+  opacity: 0.5;
+}
+
+.documentDescription {
+  font-size: 0.75rem;
+  color: $color-text-secondary;
+  line-height: 1.4;
+  @include line-clamp(1);
+}
+
+.documentMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.documentMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.6875rem;
+  color: $color-text-secondary;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.documentTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.documentTag {
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: $color-primary;
+  background: rgba($color-primary, 0.06);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.documentRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+
+  @media (max-width: $breakpoint-sm) {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.documentStats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.documentStat {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.6875rem;
+  color: $color-text-secondary;
+  font-weight: 400;
+}
+
+.documentDate {
+  font-size: 0.6875rem;
+  color: $color-text-secondary;
+  font-weight: 400;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: right;
+}
+
+.documentActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.documentActionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+
+  &:hover {
+    background: rgba($color-primary, 0.07);
+    color: $color-primary;
+  }
+}
+
+.sourceBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: $color-info;
+  background: rgba($color-info, 0.06);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+// ── View toggle ──────────────────────────────────
+.viewToggle {
+  display: inline-flex;
+  border-radius: 8px;
+  background: rgba($color-surface-subtle, 0.5);
+  border: 1px solid rgba($color-border, 0.3);
+  overflow: hidden;
+}
+
+.viewToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+
+  &:hover {
+    color: $color-text-primary;
+    background: rgba($color-surface-subtle, 0.8);
+  }
+
+  &Active {
+    color: $color-primary;
+    background: rgba($color-primary, 0.08);
+  }
+}
+
+.resultsCount {
+  font-size: 0.75rem;
+  color: $color-text-secondary;
+  font-weight: 400;
+}

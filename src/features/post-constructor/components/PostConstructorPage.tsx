@@ -15,6 +15,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { JSONContent } from '@tiptap/react';
 import { ROUTES } from '@/lib/constants';
+import { Breadcrumbs } from '@/components/shared';
 import { usePostEditor } from '../hooks/usePostEditor';
 import { useCreatePost } from '../hooks/useCreatePost';
 import { useUpdatePost } from '../hooks/useUpdatePost';
@@ -247,6 +248,7 @@ const PostConstructorPage: React.FC = () => {
 
   return (
     <div className={styles.page}>
+      <Breadcrumbs items={[{ label: isEditMode ? 'Редактирование поста' : 'Новый пост' }]} />
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>

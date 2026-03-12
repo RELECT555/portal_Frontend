@@ -1,65 +1,83 @@
-import React, { useMemo, useState, useRef, useEffect } from 'react';
+import React, { useMemo, useState, useRef, useCallback } from 'react';
 import { TextField, InputAdornment } from '@mui/material';
 import { SearchRounded, TuneRounded, CheckRounded } from '@mui/icons-material';
-import type { BookCategory, BookSortOption } from '../types';
-import { BOOK_CATEGORY_LABELS, SORT_LABELS, SORT_OPTIONS, CATEGORY_TABS } from '../types';
-import { MOCK_BOOKS } from '../mockData';
-import styles from '../LibraryPage.module.scss';
+import { useClickOutside } from '@/hooks';
+import styles from './SharedPage.module.scss';
 
-interface Props {
-  activeCategory: BookCategory;
-  sortBy: BookSortOption;
+interface FilterToolbarProps {
+  activeCategory: string;
+  sortBy: string;
   searchQuery: string;
-  onCategoryChange: (cat: BookCategory) => void;
-  onSortChange: (option: BookSortOption) => void;
+  searchPlaceholder: string;
+  categoryLabel: string;
+  categoryTabs: string[];
+  categoryLabels: Record<string, string>;
+  categoryCounts?: Map<string, number>;
+  sortOptions: [string, string][];
+  sortLabels: Record<string, string>;
+  defaultCategory?: string;
+  defaultSort: string;
+  onCategoryChange: (cat: string) => void;
+  onSortChange: (sort: string) => void;
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  rightSlot?: React.ReactNode;
+  accentColor?: string;
 }
 
-const SEARCH_SX = {
-  borderRadius: '20px',
-  bgcolor: 'rgba(0,0,0,0.04)',
-  fontSize: '0.8125rem',
-  height: 36,
-  '& fieldset': { border: 'none' },
-  '&:focus-within': {
-    bgcolor: 'rgba(255,255,255,0.7)',
-    boxShadow: '0 0 0 3px rgba(13, 148, 136, 0.08), 0 2px 8px rgba(13, 148, 136, 0.06)',
-    border: '1px solid rgba(13, 148, 136, 0.35)',
-  },
-  transition: 'all 0.25s ease',
-} as const;
+const buildSearchSx = (r: number, g: number, b: number) =>
+  ({
+    borderRadius: '20px',
+    bgcolor: 'rgba(0,0,0,0.04)',
+    fontSize: '0.8125rem',
+    height: 36,
+    '& fieldset': { border: 'none' },
+    '&:focus-within': {
+      bgcolor: 'rgba(255,255,255,0.7)',
+      boxShadow: `0 0 0 3px rgba(${r}, ${g}, ${b}, 0.08), 0 2px 8px rgba(${r}, ${g}, ${b}, 0.06)`,
+      border: `1px solid rgba(${r}, ${g}, ${b}, 0.35)`,
+    },
+    transition: 'all 0.25s ease',
+  }) as const;
 
-export const LibraryToolbar: React.FC<Props> = React.memo(
-  ({ activeCategory, sortBy, searchQuery, onCategoryChange, onSortChange, onSearchChange }) => {
+const DEFAULT_SEARCH_SX = buildSearchSx(99, 102, 241);
+
+export const FilterToolbar: React.FC<FilterToolbarProps> = React.memo(
+  ({
+    activeCategory,
+    sortBy,
+    searchQuery,
+    searchPlaceholder,
+    categoryLabel,
+    categoryTabs,
+    categoryLabels,
+    categoryCounts,
+    sortOptions,
+    sortLabels,
+    defaultCategory = 'all',
+    defaultSort,
+    onCategoryChange,
+    onSortChange,
+    onSearchChange,
+    rightSlot,
+    accentColor,
+  }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const hasActiveFilters = activeCategory !== 'all' || sortBy !== 'recent';
+    const closeDropdown = useCallback(() => setDropdownOpen(false), []);
+    useClickOutside(dropdownRef, closeDropdown, dropdownOpen);
 
-    const categoryCounts = useMemo(() => {
-      const counts = new Map<BookCategory, number>();
-      counts.set('all', MOCK_BOOKS.length);
-      for (const book of MOCK_BOOKS) {
-        counts.set(book.category, (counts.get(book.category) ?? 0) + 1);
-      }
-      return counts;
-    }, []);
+    const hasActiveFilters = activeCategory !== defaultCategory || sortBy !== defaultSort;
 
-    useEffect(() => {
-      const handleClickOutside = (e: MouseEvent) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-          setDropdownOpen(false);
-        }
-      };
-      if (dropdownOpen) {
-        document.addEventListener('mousedown', handleClickOutside);
-      }
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [dropdownOpen]);
+    const searchSx = useMemo(() => {
+      if (!accentColor) return DEFAULT_SEARCH_SX;
+      const match = accentColor.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+      if (!match) return DEFAULT_SEARCH_SX;
+      return buildSearchSx(parseInt(match[1], 16), parseInt(match[2], 16), parseInt(match[3], 16));
+    }, [accentColor]);
 
     return (
       <div className={styles.toolbar}>
-        {/* Кнопка фильтров */}
         <div className={styles.filterDropdownWrap} ref={dropdownRef}>
           <button
             type="button"
@@ -75,10 +93,9 @@ export const LibraryToolbar: React.FC<Props> = React.memo(
 
           {dropdownOpen && (
             <div className={styles.filterDropdown}>
-              {/* Категории */}
               <div className={styles.filterSection}>
-                <div className={styles.filterSectionLabel}>Категория</div>
-                {CATEGORY_TABS.map((cat) => {
+                <div className={styles.filterSectionLabel}>{categoryLabel}</div>
+                {categoryTabs.map((cat) => {
                   const isActive = activeCategory === cat;
                   return (
                     <button
@@ -87,14 +104,16 @@ export const LibraryToolbar: React.FC<Props> = React.memo(
                       className={`${styles.filterDropdownItem} ${isActive ? styles.filterDropdownItemActive : ''}`}
                       onClick={() => {
                         onCategoryChange(cat);
-                        if (sortBy === 'recent') setDropdownOpen(false);
+                        if (sortBy === defaultSort) setDropdownOpen(false);
                       }}
                     >
                       <span className={styles.filterDropdownItemLabel}>
-                        {BOOK_CATEGORY_LABELS[cat]}
-                        <span className={styles.filterDropdownCount}>
-                          {categoryCounts.get(cat) ?? 0}
-                        </span>
+                        {categoryLabels[cat]}
+                        {categoryCounts && (
+                          <span className={styles.filterDropdownCount}>
+                            {categoryCounts.get(cat) ?? 0}
+                          </span>
+                        )}
                       </span>
                       {isActive && <CheckRounded className={styles.filterDropdownCheck} />}
                     </button>
@@ -104,10 +123,9 @@ export const LibraryToolbar: React.FC<Props> = React.memo(
 
               <div className={styles.filterDivider} />
 
-              {/* Сортировка */}
               <div className={styles.filterSection}>
                 <div className={styles.filterSectionLabel}>Сортировка</div>
-                {SORT_OPTIONS.map(([key, label]) => {
+                {sortOptions.map(([key, label]) => {
                   const isActive = sortBy === key;
                   return (
                     <button
@@ -133,8 +151,8 @@ export const LibraryToolbar: React.FC<Props> = React.memo(
                     type="button"
                     className={styles.filterResetBtn}
                     onClick={() => {
-                      onCategoryChange('all');
-                      onSortChange('recent');
+                      onCategoryChange(defaultCategory);
+                      onSortChange(defaultSort);
                       setDropdownOpen(false);
                     }}
                   >
@@ -146,14 +164,13 @@ export const LibraryToolbar: React.FC<Props> = React.memo(
           )}
         </div>
 
-        {/* Активная категория как пилюля */}
-        {activeCategory !== 'all' && (
+        {activeCategory !== defaultCategory && (
           <span className={styles.activeCategoryPill}>
-            {BOOK_CATEGORY_LABELS[activeCategory]}
+            {categoryLabels[activeCategory]}
             <button
               type="button"
               className={styles.activeCategoryClose}
-              onClick={() => onCategoryChange('all')}
+              onClick={() => onCategoryChange(defaultCategory)}
               aria-label="Сбросить категорию"
             >
               ×
@@ -161,14 +178,13 @@ export const LibraryToolbar: React.FC<Props> = React.memo(
           </span>
         )}
 
-        {/* Активная сортировка как пилюля */}
-        {sortBy !== 'recent' && (
+        {sortBy !== defaultSort && (
           <span className={styles.activeCategoryPill}>
-            {SORT_LABELS[sortBy]}
+            {sortLabels[sortBy]}
             <button
               type="button"
               className={styles.activeCategoryClose}
-              onClick={() => onSortChange('recent')}
+              onClick={() => onSortChange(defaultSort)}
               aria-label="Сбросить сортировку"
             >
               ×
@@ -179,7 +195,7 @@ export const LibraryToolbar: React.FC<Props> = React.memo(
         <TextField
           className={styles.searchField}
           size="small"
-          placeholder="Поиск книг..."
+          placeholder={searchPlaceholder}
           value={searchQuery}
           onChange={onSearchChange}
           InputProps={{
@@ -188,11 +204,13 @@ export const LibraryToolbar: React.FC<Props> = React.memo(
                 <SearchRounded sx={{ fontSize: 15, color: 'text.secondary', opacity: 0.6 }} />
               </InputAdornment>
             ),
-            sx: SEARCH_SX,
+            sx: searchSx,
           }}
         />
 
         <div className={styles.toolbarSpacer} />
+
+        {rightSlot}
       </div>
     );
   },

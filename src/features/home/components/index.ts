@@ -9,3 +9,5 @@ export { VacanciesWidget } from './VacanciesWidget';
 export { GratitudeWidget } from './GratitudeWidget';
 export { LibraryWidget } from './LibraryWidget';
 export { KnowledgeBaseWidget } from './KnowledgeBaseWidget';
+export { MerchShopWidget } from './MerchShopWidget';
+export { MoodWidget } from './MoodWidget';

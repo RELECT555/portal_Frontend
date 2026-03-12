@@ -57,7 +57,7 @@ export const MainNewsWidget: React.FC<Props> = React.memo(({ news }) => {
           position: 'relative',
           width: '100%',
           height: '100%',
-          minHeight: 200,
+          minHeight: 180,
           borderRadius: '14px',
           overflow: 'hidden',
           cursor: 'pointer',

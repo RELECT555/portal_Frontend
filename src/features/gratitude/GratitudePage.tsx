@@ -10,6 +10,8 @@ import {
   WorkspacePremium,
   TrendingUp,
 } from '@mui/icons-material';
+import { Breadcrumbs } from '@/components/shared';
+import { ROUTES } from '@/lib/constants';
 import type { GratitudeEntry } from './types';
 import styles from './GratitudePage.module.scss';
 
@@ -423,6 +425,12 @@ const GratitudePage: React.FC = () => {
 
   return (
     <Box>
+      <Breadcrumbs
+        items={[
+          { label: 'Корпоративная культура', to: ROUTES.CULTURE },
+          { label: 'Благодарности' },
+        ]}
+      />
       {/* ─── Header ─── */}
       <Box
         sx={{

@@ -4,6 +4,7 @@ import type { LivePublication } from '@/features/live/types';
 import type { GratitudeEntry } from '@/features/gratitude/types';
 import type { Vacancy } from '@/features/vacancies/types';
 import type { KnowledgeBaseDocument } from '@/features/knowledge-base/types';
+import type { MerchPreviewItem } from './components/MerchShopWidget';
 
 export interface Book {
   id: string;
@@ -252,3 +253,36 @@ export const MOCK_KB_DOCUMENTS: KnowledgeBaseDocument[] = [
     updatedAt: '2026-02-15',
   },
 ];
+
+export const MOCK_MERCH_PREVIEW: MerchPreviewItem[] = [
+  {
+    id: '1',
+    name: 'Худи «Медипал» с вышитым логотипом',
+    priceCoins: 850,
+    category: 'Одежда',
+    isBestseller: true,
+  },
+  {
+    id: '2',
+    name: 'Термокружка «Медипал» 350 мл',
+    priceCoins: 320,
+    category: 'Кружки и термосы',
+    isBestseller: true,
+  },
+  {
+    id: '4',
+    name: 'Футболка «Медипал» — лимитированная серия',
+    priceCoins: 450,
+    category: 'Одежда',
+    isNew: true,
+  },
+  {
+    id: '8',
+    name: 'Подарочный набор «Новичок»',
+    priceCoins: 600,
+    category: 'Подарочные наборы',
+    isBestseller: true,
+  },
+];
+
+export const MOCK_USER_COINS = 2450;

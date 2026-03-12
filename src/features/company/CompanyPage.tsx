@@ -1,8 +1,5 @@
 import React, { useMemo } from 'react';
-import { Breadcrumbs, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { NavigateNext as ChevronIcon } from '@mui/icons-material';
-import { ROUTES } from '@/lib/constants';
+import { Breadcrumbs } from '@/components/shared';
 import { CompanySectionCard } from './components/CompanySectionCard';
 import { COMPANY_SECTIONS } from './companyData';
 import styles from './CompanyPage.module.scss';
@@ -12,20 +9,7 @@ const CompanyPage: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <Breadcrumbs separator={<ChevronIcon fontSize="small" />} sx={{ mb: 2 }}>
-        <Typography
-          component={Link}
-          to={ROUTES.HOME}
-          variant="body2"
-          color="text.secondary"
-          sx={{ '&:hover': { color: 'primary.main' } }}
-        >
-          Главная
-        </Typography>
-        <Typography variant="body2" color="text.primary" fontWeight={500}>
-          Компания
-        </Typography>
-      </Breadcrumbs>
+      <Breadcrumbs items={[{ label: 'Компания' }]} />
 
       <div className={styles.header}>
         <h1 className={styles.title}>О Компании</h1>

@@ -1,0 +1,941 @@
+@use '../../styles/variables' as *;
+
+// ══════════════════════════════════════════════
+// CSS Custom Properties — DARK theme (default)
+// ══════════════════════════════════════════════
+.portal {
+  --emo-bg: #0a0a10;
+  --emo-card: rgba(255, 255, 255, 0.05);
+  --emo-card-hover: rgba(255, 255, 255, 0.08);
+  --emo-border: rgba(255, 255, 255, 0.08);
+  --emo-border-strong: rgba(255, 255, 255, 0.14);
+  --emo-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --emo-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --emo-text-1: rgba(255, 255, 255, 0.92);
+  --emo-text-2: rgba(255, 255, 255, 0.52);
+  --emo-text-3: rgba(255, 255, 255, 0.28);
+  --emo-accent: #a78bfa;
+  --emo-accent-soft: rgba(167, 139, 250, 0.12);
+  --emo-accent-glow: rgba(167, 139, 250, 0.25);
+  --emo-accent-border: rgba(167, 139, 250, 0.35);
+  --emo-input-bg: rgba(255, 255, 255, 0.02);
+  --emo-input-border: rgba(255, 255, 255, 0.05);
+  --emo-input-focus: rgba(167, 139, 250, 0.3);
+  --emo-input-focus-ring: rgba(167, 139, 250, 0.06);
+  --emo-btn-bg: linear-gradient(135deg, rgba(139, 92, 246, 0.65), rgba(99, 102, 241, 0.55));
+  --emo-btn-shadow: 0 4px 16px rgba(139, 92, 246, 0.2);
+  --emo-btn-shadow-hover: 0 6px 24px rgba(139, 92, 246, 0.3);
+  --emo-streak-color: #f59e0b;
+  --emo-streak-bg: rgba(245, 158, 11, 0.08);
+  --emo-streak-border: rgba(245, 158, 11, 0.15);
+  --emo-delete-bg: rgba(239, 68, 68, 0.1);
+  --emo-delete-border: rgba(239, 68, 68, 0.2);
+  --emo-delete-color: #f87171;
+  --emo-orb1: rgba(139, 92, 246, 0.06);
+  --emo-orb2: rgba(59, 130, 246, 0.04);
+  --emo-bg-gradient1: rgba(124, 58, 237, 0.07);
+  --emo-bg-gradient2: rgba(59, 130, 246, 0.05);
+  --emo-tab-active-bg: rgba(255, 255, 255, 0.08);
+  --emo-tab-active-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 8px rgba(0, 0, 0, 0.15);
+  --emo-hover-entry: rgba(255, 255, 255, 0.03);
+  --emo-hover-entry-border: rgba(255, 255, 255, 0.04);
+  --emo-distribution-bar-bg: rgba(255, 255, 255, 0.02);
+  --emo-calendar-today: rgba(167, 139, 250, 0.5);
+}
+
+// ══════════════════════════════════════════════
+// CSS Custom Properties — LIGHT theme
+// ══════════════════════════════════════════════
+.portalLight {
+  --emo-bg: #{$color-bg-main};
+  --emo-card: #{$color-bg-card};
+  --emo-card-hover: #f8fafb;
+  --emo-border: #{$color-border};
+  --emo-border-strong: #cbd5e1;
+  --emo-shadow: #{$shadow-card};
+  --emo-inset: none;
+  --emo-text-1: #{$color-text-primary};
+  --emo-text-2: #{$color-text-secondary};
+  --emo-text-3: #94a3b8;
+  --emo-accent: #{$color-primary};
+  --emo-accent-soft: rgba(13, 148, 136, 0.08);
+  --emo-accent-glow: rgba(13, 148, 136, 0.15);
+  --emo-accent-border: rgba(13, 148, 136, 0.35);
+  --emo-input-bg: #f8fafb;
+  --emo-input-border: #{$color-border};
+  --emo-input-focus: rgba(13, 148, 136, 0.4);
+  --emo-input-focus-ring: rgba(13, 148, 136, 0.08);
+  --emo-btn-bg: linear-gradient(135deg, #{$color-primary}, #{$color-primary-dark});
+  --emo-btn-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
+  --emo-btn-shadow-hover: 0 6px 20px rgba(13, 148, 136, 0.3);
+  --emo-streak-color: #{$color-secondary-dark};
+  --emo-streak-bg: rgba(245, 158, 11, 0.08);
+  --emo-streak-border: rgba(245, 158, 11, 0.18);
+  --emo-delete-bg: rgba(239, 68, 68, 0.06);
+  --emo-delete-border: rgba(239, 68, 68, 0.15);
+  --emo-delete-color: #{$color-error};
+  --emo-orb1: rgba(13, 148, 136, 0.04);
+  --emo-orb2: rgba(99, 102, 241, 0.03);
+  --emo-bg-gradient1: rgba(13, 148, 136, 0.04);
+  --emo-bg-gradient2: rgba(99, 102, 241, 0.03);
+  --emo-tab-active-bg: #{$color-bg-card};
+  --emo-tab-active-shadow: #{$shadow-card}, inset 0 -1px 0 #{$color-border};
+  --emo-hover-entry: #{$color-surface-subtle};
+  --emo-hover-entry-border: #{$color-border};
+  --emo-distribution-bar-bg: #{$color-surface-subtle};
+  --emo-calendar-today: rgba(13, 148, 136, 0.5);
+}
+
+// ══════════════════════════════════════════════
+// Structural styles (theme-agnostic via vars)
+// ══════════════════════════════════════════════
+
+@mixin card {
+  background: var(--emo-card);
+  border: 1px solid var(--emo-border);
+  box-shadow: var(--emo-inset), var(--emo-shadow);
+  border-radius: 20px;
+  backdrop-filter: blur(40px) saturate(1.5);
+  -webkit-backdrop-filter: blur(40px) saturate(1.5);
+}
+
+.portal {
+  min-height: 100vh;
+  background: var(--emo-bg);
+  color: var(--emo-text-1);
+  position: relative;
+  overflow-x: hidden;
+  transition:
+    background 0.35s ease,
+    color 0.35s ease;
+
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 500px at 15% 5%, var(--emo-bg-gradient1), transparent),
+      radial-gradient(ellipse 500px 400px at 85% 90%, var(--emo-bg-gradient2), transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+.portalLight {
+  .ambientOrb1,
+  .ambientOrb2 {
+    display: none;
+  }
+
+  .glassCard,
+  .primaryCard,
+  .tabBar,
+  .statCard {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+.ambientOrb1,
+.ambientOrb2 {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 25s ease-in-out infinite alternate;
+}
+
+.ambientOrb1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--emo-orb1) 0%, transparent 60%);
+  top: -200px;
+  left: -200px;
+  filter: blur(80px);
+}
+
+.ambientOrb2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--emo-orb2) 0%, transparent 60%);
+  bottom: -150px;
+  right: -150px;
+  filter: blur(80px);
+  animation-delay: -12s;
+}
+
+@keyframes orbFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(25px, -15px) scale(1.04);
+  }
+}
+
+// ── Content ───────────────────────────────────
+.content {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 20px 80px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+// ── Top bar ───────────────────────────────────
+.topBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--emo-text-2);
+  text-decoration: none;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background 0.2s;
+  padding: 5px 10px 5px 6px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+
+  &:hover {
+    color: var(--emo-text-1);
+    border-color: var(--emo-border);
+    background: var(--emo-card);
+  }
+}
+
+.backLinkText {
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
+.topBarTitle {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--emo-text-2);
+  flex: 1;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.themeToggle {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid var(--emo-border);
+  background: var(--emo-card);
+  color: var(--emo-text-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: inherit;
+
+  &:hover {
+    color: var(--emo-accent);
+    border-color: var(--emo-border-strong);
+  }
+}
+
+.topBarStreak {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--emo-streak-color);
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: var(--emo-streak-bg);
+  border: 1px solid var(--emo-streak-border);
+}
+
+// ── Tab bar ───────────────────────────────────
+.tabBar {
+  @include card;
+  border-radius: 14px;
+  padding: 4px;
+  display: flex;
+  gap: 2px;
+}
+
+.tabBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--emo-text-3);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+  font-family: inherit;
+
+  &:hover {
+    color: var(--emo-text-2);
+    background: var(--emo-hover-entry);
+  }
+}
+
+.tabBtnActive {
+  color: var(--emo-text-1) !important;
+  background: var(--emo-tab-active-bg) !important;
+  box-shadow: var(--emo-tab-active-shadow);
+}
+
+.tabBadge {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 100px;
+  background: var(--emo-accent-soft);
+  color: var(--emo-accent);
+  line-height: 1.4;
+}
+
+// ── Tab content ───────────────────────────────
+.tabContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: tabFadeIn 0.25s ease;
+}
+
+@keyframes tabFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ── Glass card (shared) ───────────────────────
+.glassCard {
+  @include card;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (max-width: $breakpoint-sm) {
+    padding: 16px;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cardHeaderTitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--emo-text-1);
+  letter-spacing: -0.01em;
+  flex: 1;
+}
+
+.cardHeaderCount {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--emo-text-3);
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--emo-hover-entry);
+}
+
+.cardHeaderLink {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--emo-accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+// ══════════════════════════════════════════════
+// TAB: Record
+// ══════════════════════════════════════════════
+
+.primaryCard {
+  @include card;
+  border-radius: 24px;
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  @media (max-width: $breakpoint-sm) {
+    padding: 20px 16px;
+  }
+}
+
+.primaryTop {
+  text-align: center;
+}
+
+.greetingTitle {
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.03em;
+  color: var(--emo-text-1);
+}
+
+.greetingText {
+  font-size: 0.8125rem;
+  color: var(--emo-text-2);
+  margin: 6px 0 0;
+}
+
+.moodGrid {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.moodBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  border: 1px solid var(--emo-input-border);
+  background: var(--emo-input-bg);
+  font-family: inherit;
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+  min-width: 72px;
+
+  &:hover {
+    background: var(--emo-card-hover);
+    border-color: var(--emo-border-strong);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(0.97);
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    min-width: 60px;
+    padding: 10px 12px;
+  }
+}
+
+.moodBtnActive {
+  background: var(--emo-accent-soft) !important;
+  border-color: var(--emo-accent-border) !important;
+  box-shadow:
+    0 0 24px var(--emo-accent-glow),
+    0 4px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.moodEmoji {
+  font-size: 1.625rem;
+  line-height: 1;
+
+  @media (max-width: $breakpoint-sm) {
+    font-size: 1.25rem;
+  }
+}
+
+.moodLabel {
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--emo-text-3);
+  transition: color 0.2s;
+
+  .moodBtnActive & {
+    color: var(--emo-accent);
+  }
+}
+
+// ── Note area ─────────────────────────────────
+.noteArea {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+  animation: slideIn 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.noteTextarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--emo-input-border);
+  background: var(--emo-input-bg);
+  color: var(--emo-text-1);
+  font-size: 0.8125rem;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  line-height: 1.6;
+
+  &::placeholder {
+    color: var(--emo-text-3);
+  }
+
+  &:focus {
+    border-color: var(--emo-input-focus);
+    box-shadow: 0 0 0 3px var(--emo-input-focus-ring);
+  }
+}
+
+.tagCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--emo-text-2);
+  border: 1px solid var(--emo-input-border);
+  background: var(--emo-input-bg);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+
+  &:hover {
+    color: var(--emo-text-1);
+    border-color: var(--emo-border-strong);
+    background: var(--emo-card-hover);
+  }
+}
+
+.tagChipSelected {
+  color: var(--emo-accent) !important;
+  background: var(--emo-accent-soft) !important;
+  border-color: var(--emo-accent-border) !important;
+}
+
+.submitBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 28px;
+  border-radius: 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--emo-btn-bg);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+  font-family: inherit;
+  align-self: flex-end;
+  box-shadow: var(--emo-btn-shadow);
+
+  &:hover {
+    box-shadow: var(--emo-btn-shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+// ── Mini diary ────────────────────────────────
+.miniDiaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.miniDiaryEntry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--emo-hover-entry);
+  }
+}
+
+.miniDiaryEmoji {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.miniDiaryLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--emo-text-1);
+  flex: 1;
+}
+
+.miniDiaryDate {
+  font-size: 0.625rem;
+  color: var(--emo-text-3);
+  font-weight: 500;
+}
+
+// ══════════════════════════════════════════════
+// TAB: Stats
+// ══════════════════════════════════════════════
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.statCard {
+  @include card;
+  border-radius: 16px;
+  padding: 18px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: var(--emo-card-hover);
+    transform: translateY(-2px);
+  }
+}
+
+.statCardValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--emo-text-1);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.statCardValueStreak {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--emo-streak-color);
+}
+
+.statCardLabel {
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--emo-text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+// ── Calendar ──────────────────────────────────
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendarDayLabel {
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: var(--emo-text-3);
+  text-align: center;
+  padding: 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.calendarCell {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.calendarCellNum {
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--emo-text-3);
+}
+
+.calendarCellEmoji {
+  font-size: 0.8125rem;
+}
+
+.calendarCellFilled {
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.25);
+    z-index: 1;
+  }
+}
+
+.calendarCellToday {
+  box-shadow: inset 0 0 0 1.5px var(--emo-calendar-today);
+}
+
+// ── Distribution ──────────────────────────────
+.distributionBars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.distributionRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.distributionEmoji {
+  font-size: 1.125rem;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.distributionLabel {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--emo-text-2);
+  width: 68px;
+  flex-shrink: 0;
+}
+
+.distributionBarWrap {
+  flex: 1;
+  height: 24px;
+  background: var(--emo-distribution-bar-bg);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.distributionBar {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+  min-width: 3px;
+}
+
+.distributionCount {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--emo-text-2);
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+// ══════════════════════════════════════════════
+// TAB: Diary
+// ══════════════════════════════════════════════
+
+.diaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.diaryEntry {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: var(--emo-hover-entry);
+    border-color: var(--emo-hover-entry-border);
+
+    .diaryDeleteBtn {
+      opacity: 1;
+    }
+  }
+}
+
+.diaryEmoji {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  line-height: 1;
+  padding-top: 1px;
+}
+
+.diaryBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.diaryMeta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.diaryMoodLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--emo-text-1);
+}
+
+.diaryDate {
+  font-size: 0.625rem;
+  color: var(--emo-text-3);
+  font-weight: 500;
+}
+
+.diaryNote {
+  font-size: 0.75rem;
+  color: var(--emo-text-2);
+  line-height: 1.5;
+  margin: 2px 0 0;
+}
+
+.diaryTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.diaryTag {
+  font-size: 0.5625rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: var(--emo-accent-soft);
+  color: var(--emo-accent);
+  letter-spacing: 0.02em;
+}
+
+.diaryDeleteBtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--emo-text-3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  opacity: 0;
+  flex-shrink: 0;
+  font-family: inherit;
+
+  &:hover {
+    background: var(--emo-delete-bg);
+    color: var(--emo-delete-color);
+  }
+}
+
+// ── Empty diary ───────────────────────────────
+.emptyDiary {
+  text-align: center;
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.emptyDiaryIcon {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+.emptyDiaryText {
+  font-size: 0.8125rem;
+  color: var(--emo-text-3);
+}
+
+.emptyDiaryBtn {
+  margin-top: 4px;
+  padding: 8px 20px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--emo-accent);
+  background: var(--emo-accent-soft);
+  border: 1px solid var(--emo-accent-border);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+
+  &:hover {
+    box-shadow: 0 2px 8px var(--emo-accent-glow);
+  }
+}

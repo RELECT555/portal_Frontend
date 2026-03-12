@@ -1,4 +1,12 @@
 export { SectionHeader } from './SectionHeader';
 export { PagePlaceholder } from './PagePlaceholder';
+export { Breadcrumbs } from './Breadcrumbs';
 export { ErrorBoundary } from './ErrorBoundary';
 export { NotFoundPage } from './NotFoundPage';
+export { PageHero } from './PageHero';
+export type { PageHeroStat } from './PageHero';
+export { EmptyState } from './EmptyState';
+export { FilterToolbar } from './FilterToolbar';
+export { SectionDivider } from './SectionDivider';
+export { FormModal } from './FormModal';
+export { TagList } from './TagList';

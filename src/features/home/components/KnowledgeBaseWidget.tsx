@@ -11,8 +11,8 @@ interface Props {
 }
 
 export const KnowledgeBaseWidget: React.FC<Props> = React.memo(({ documents }) => (
-  <Card>
-    <CardContent>
+  <Card sx={{ height: '100%', boxShadow: 'none', border: '1px solid rgba(0,0,0,0.06)' }}>
+    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
       <SectionHeader
         title="Новое в Базе знаний"
         linkText="Все документы"

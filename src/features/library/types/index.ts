@@ -8,6 +8,15 @@ export type BookCategory =
   | 'psychology'
   | 'fiction';
 
+export type BookProject =
+  | 'all'
+  | 'portal'
+  | 'mobile-app'
+  | 'crm'
+  | 'erp'
+  | 'analytics'
+  | 'infrastructure';
+
 export type BookSortOption = 'recent' | 'popular' | 'rating';
 
 export type BookStatus = 'available' | 'borrowed' | 'reserved';
@@ -19,6 +28,7 @@ export interface LibraryBook {
   description: string;
   coverUrl?: string;
   category: Exclude<BookCategory, 'all'>;
+  project?: Exclude<BookProject, 'all'>;
   rating: number;
   reviewsCount: number;
   borrowCount: number;
@@ -65,6 +75,26 @@ export const BOOK_STATUS_LABELS: Record<BookStatus, string> = {
   borrowed: 'На руках',
   reserved: 'Забронирована',
 };
+
+export const BOOK_PROJECT_LABELS: Record<BookProject, string> = {
+  all: 'Все проекты',
+  portal: 'Портал',
+  'mobile-app': 'Мобильное приложение',
+  crm: 'CRM',
+  erp: 'ERP',
+  analytics: 'Аналитика',
+  infrastructure: 'Инфраструктура',
+};
+
+export const PROJECT_TABS: BookProject[] = [
+  'all',
+  'portal',
+  'mobile-app',
+  'crm',
+  'erp',
+  'analytics',
+  'infrastructure',
+];
 
 export const SORT_LABELS: Record<BookSortOption, string> = {
   recent: 'Новые',

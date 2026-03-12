@@ -150,7 +150,7 @@ export const NewsListWidget: React.FC<Props> = React.memo(({ news }) => (
       overflow: 'hidden',
     }}
   >
-    <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2 } }}>
+    <CardContent sx={{ p: 2, '&:last-child': { pb: 1.5 } }}>
       <SectionHeader title="Новости" linkText="Все новости" linkTo={ROUTES.NEWS} />
 
       {news.length === 0 ? (

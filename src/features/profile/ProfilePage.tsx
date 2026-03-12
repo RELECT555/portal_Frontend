@@ -1,4 +1,5 @@
 import React from 'react';
+import { Breadcrumbs } from '@/components/shared';
 import { ProfileHero } from './components/ProfileHero';
 import { ProfileInfoCard } from './components/ProfileInfoCard';
 import { ProfileBioCard } from './components/ProfileBioCard';
@@ -14,6 +15,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className={styles.page}>
+      <Breadcrumbs items={[{ label: 'Профиль' }]} />
       <div className={styles.ambientGlow} />
       <div className={styles.ambientGlow2} />
 

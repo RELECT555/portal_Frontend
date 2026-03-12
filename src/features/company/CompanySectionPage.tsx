@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Breadcrumbs, Typography, Box } from '@mui/material';
-import { NavigateNext as ChevronIcon, Construction as ConstructionIcon } from '@mui/icons-material';
+import { useParams } from 'react-router-dom';
+import { Typography, Box } from '@mui/material';
+import { Construction as ConstructionIcon } from '@mui/icons-material';
 import { ROUTES } from '@/lib/constants';
+import { Breadcrumbs } from '@/components/shared';
 import { COMPANY_SECTIONS } from './companyData';
 
 const CompanySectionPage: React.FC = () => {
@@ -23,29 +24,7 @@ const CompanySectionPage: React.FC = () => {
 
   return (
     <Box>
-      <Breadcrumbs separator={<ChevronIcon fontSize="small" />} sx={{ mb: 3 }}>
-        <Typography
-          component={Link}
-          to={ROUTES.HOME}
-          variant="body2"
-          color="text.secondary"
-          sx={{ '&:hover': { color: 'primary.main' } }}
-        >
-          Главная
-        </Typography>
-        <Typography
-          component={Link}
-          to={ROUTES.COMPANY}
-          variant="body2"
-          color="text.secondary"
-          sx={{ '&:hover': { color: 'primary.main' } }}
-        >
-          Компания
-        </Typography>
-        <Typography variant="body2" color="text.primary" fontWeight={500}>
-          {section.title}
-        </Typography>
-      </Breadcrumbs>
+      <Breadcrumbs items={[{ label: 'Компания', to: ROUTES.COMPANY }, { label: section.title }]} />
 
       <Typography variant="h1" sx={{ mb: 2 }}>
         {section.title}

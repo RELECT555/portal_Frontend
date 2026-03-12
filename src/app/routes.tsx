@@ -17,10 +17,12 @@ const KnowledgeBasePage = lazy(() => import('@/features/knowledge-base/Knowledge
 const VacanciesPage = lazy(() => import('@/features/vacancies/VacanciesPage'));
 const GratitudePage = lazy(() => import('@/features/gratitude/GratitudePage'));
 const LibraryPage = lazy(() => import('@/features/library/LibraryPage'));
+const MerchShopPage = lazy(() => import('@/features/merch-shop/MerchShopPage'));
 const PostConstructorPage = lazy(
   () => import('@/features/post-constructor/components/PostConstructorPage'),
 );
 const ProfilePage = lazy(() => import('@/features/profile/ProfilePage'));
+const MoodPortalPage = lazy(() => import('@/features/mood/MoodPortalPage'));
 
 const PageLoader: React.FC = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
@@ -38,6 +40,10 @@ function withSuspense(Component: React.LazyExoticComponent<React.ComponentType>)
 
 export const AppRoutes: React.FC = () => (
   <Routes>
+    {/* Fullscreen immersive routes — no layout shell */}
+    <Route path={ROUTES.MERCH_SHOP} element={withSuspense(MerchShopPage)} />
+    <Route path={ROUTES.MOOD} element={withSuspense(MoodPortalPage)} />
+
     <Route element={<MainLayout />}>
       <Route path={ROUTES.HOME} element={withSuspense(HomePage)} />
       <Route path={ROUTES.COMPANY} element={withSuspense(CompanyPage)} />

@@ -1,13 +1,22 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import { MenuBookRounded } from '@mui/icons-material';
 import { useDebounce } from '@/hooks';
-import { HeroSection } from './components/HeroSection';
-import { LibraryToolbar } from './components/LibraryToolbar';
+import { Breadcrumbs, PageHero, FilterToolbar, EmptyState } from '@/components/shared';
+import { ROUTES } from '@/lib/constants';
 import { FeaturedBooks } from './components/FeaturedBooks';
 import { BookCard } from './components/BookCard';
-import { LibraryEmptyState } from './components/LibraryEmptyState';
 import { MOCK_BOOKS, LIBRARY_STATS } from './mockData';
 import type { BookCategory, BookSortOption } from './types';
+import { BOOK_CATEGORY_LABELS, SORT_LABELS, SORT_OPTIONS, CATEGORY_TABS } from './types';
 import styles from './LibraryPage.module.scss';
+
+const ACCENT = '#0d9488';
+
+const HERO_STATS = [
+  { value: LIBRARY_STATS.totalBooks, label: 'книг' },
+  { value: LIBRARY_STATS.available, label: 'доступно' },
+  { value: LIBRARY_STATS.readers, label: 'читателей' },
+];
 
 const LibraryPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<BookCategory>('all');
@@ -15,16 +24,16 @@ const LibraryPage: React.FC = () => {
   const debouncedSearch = useDebounce(searchQuery);
   const [sortBy, setSortBy] = useState<BookSortOption>('recent');
 
-  const handleCategoryChange = useCallback((cat: BookCategory): void => {
-    setActiveCategory(cat);
+  const handleCategoryChange = useCallback((cat: string): void => {
+    setActiveCategory(cat as BookCategory);
   }, []);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchQuery(e.target.value);
   }, []);
 
-  const handleSortChange = useCallback((option: BookSortOption): void => {
-    setSortBy(option);
+  const handleSortChange = useCallback((option: string): void => {
+    setSortBy(option as BookSortOption);
   }, []);
 
   const filteredBooks = useMemo(() => {
@@ -74,16 +83,35 @@ const LibraryPage: React.FC = () => {
     featuredBooks.length > 0 && activeCategory === 'all' && !debouncedSearch.trim();
 
   return (
-    <div className={styles.page}>
-      <HeroSection stats={LIBRARY_STATS} />
+    <div
+      className={styles.page}
+      style={{ '--accent': ACCENT, '--accent-rgb': '13, 148, 136' } as React.CSSProperties}
+    >
+      <Breadcrumbs
+        items={[{ label: 'База знаний', to: ROUTES.KNOWLEDGE_BASE }, { label: 'Библиотека' }]}
+      />
 
-      <LibraryToolbar
+      <PageHero
+        title="Библиотека"
+        subtitle="Корпоративная коллекция книг для профессионального роста"
+        stats={HERO_STATS}
+      />
+
+      <FilterToolbar
         activeCategory={activeCategory}
         sortBy={sortBy}
         searchQuery={searchQuery}
+        searchPlaceholder="Поиск книги..."
+        categoryLabel="Жанр"
+        categoryTabs={CATEGORY_TABS as string[]}
+        categoryLabels={BOOK_CATEGORY_LABELS}
+        sortOptions={SORT_OPTIONS as [string, string][]}
+        sortLabels={SORT_LABELS}
+        defaultSort="recent"
         onCategoryChange={handleCategoryChange}
         onSortChange={handleSortChange}
         onSearchChange={handleSearchChange}
+        accentColor={ACCENT}
       />
 
       {showFeatured && <FeaturedBooks books={featuredBooks} />}
@@ -104,7 +132,10 @@ const LibraryPage: React.FC = () => {
           </div>
         </>
       ) : (
-        <LibraryEmptyState />
+        <EmptyState
+          icon={<MenuBookRounded sx={{ fontSize: 24, color: ACCENT, opacity: 0.4 }} />}
+          title="Книги не найдены"
+        />
       )}
     </div>
   );

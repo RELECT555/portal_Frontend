@@ -23,7 +23,7 @@ export const IdeasBankWidget: React.FC = React.memo(() => (
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
-      p: 3,
+      p: 2.5,
       transition: 'all 0.2s ease',
       '&:hover': {
         boxShadow: `0 8px 28px -8px ${alpha('#f59e0b', 0.12)}`,

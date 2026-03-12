@@ -14,9 +14,11 @@ export const ROUTES = {
   VACANCIES: '/vacancies',
   GRATITUDE: '/gratitude',
   LIBRARY: '/library',
+  MERCH_SHOP: '/merch-shop',
   POST_CONSTRUCTOR: '/constructor',
   POST_CONSTRUCTOR_EDIT: '/constructor/:id',
   PROFILE: '/profile',
+  MOOD: '/mood',
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
@@ -50,6 +52,8 @@ export const NAV_ITEMS: NavItem[] = [
       { label: 'Лайв', path: ROUTES.LIVE },
       { label: 'Благодарности', path: ROUTES.GRATITUDE },
       { label: 'Банк идей', path: ROUTES.IDEAS },
+      { label: 'Корп-магазин мерча', path: ROUTES.MERCH_SHOP },
+      { label: 'Дневник настроения', path: ROUTES.MOOD },
     ],
   },
   {

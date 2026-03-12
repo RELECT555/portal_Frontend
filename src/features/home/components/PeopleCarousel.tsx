@@ -180,16 +180,14 @@ export const PeopleCarousel: React.FC<Props> = React.memo(
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           overflow: 'hidden',
-          p: 2.5,
+          p: 2,
         }}
       >
-        {/* Three columns */}
         <Box
           sx={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: 2,
-            height: '100%',
           }}
         >
           {/* Birthdays */}

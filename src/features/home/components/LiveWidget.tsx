@@ -50,108 +50,124 @@ const StatBadge: React.FC<{ icon: React.ReactNode; count: number }> = ({ icon, c
 );
 
 export const LiveWidget: React.FC<Props> = React.memo(({ publications }) => (
-  <Box>
-    <SectionHeader
-      titleNode={<LiveTitle />}
-      linkText="Вся наша LIVE"
-      linkTo={ROUTES.LIVE}
-      action={
-        <Chip
-          label="+ Публикация"
-          component={Link}
-          to={ROUTES.LIVE}
-          clickable
-          color="primary"
-          variant="outlined"
-          size="small"
-          sx={{ fontWeight: 600 }}
-        />
-      }
-    />
-    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-      {publications.map((pub) => (
-        <Card
-          key={pub.id}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            transition: 'box-shadow 0.3s ease',
-          }}
-        >
-          <CardMedia
-            component="div"
+  <Card
+    sx={{
+      height: '100%',
+      borderRadius: '14px',
+      border: '1px solid rgba(0,0,0,0.06)',
+      boxShadow: 'none',
+      overflow: 'hidden',
+    }}
+  >
+    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+      <SectionHeader
+        titleNode={<LiveTitle />}
+        linkText="Вся наша LIVE"
+        linkTo={ROUTES.LIVE}
+        action={
+          <Chip
+            label="+ Публикация"
+            component={Link}
+            to={ROUTES.LIVE}
+            clickable
+            color="primary"
+            variant="outlined"
+            size="small"
+            sx={{ fontWeight: 600 }}
+          />
+        }
+      />
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 1.5 }}>
+        {publications.map((pub) => (
+          <Card
+            key={pub.id}
+            variant="outlined"
             sx={{
-              height: 150,
-              backgroundColor: 'grey.100',
-              backgroundImage: pub.imageUrl ? `url(${pub.imageUrl})` : undefined,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              borderColor: 'rgba(0,0,0,0.06)',
+              boxShadow: 'none',
+              transition: 'box-shadow 0.2s ease',
+              '&:hover': { boxShadow: '0 4px 16px rgba(0,0,0,0.06)' },
             }}
           >
-            <Chip
-              label={pub.authorName}
-              size="small"
+            <CardMedia
+              component="div"
               sx={{
-                position: 'absolute',
-                top: 10,
-                left: 10,
-                bgcolor: 'rgba(255,255,255,0.92)',
-                backdropFilter: 'blur(4px)',
-                fontWeight: 600,
-                fontSize: '0.65rem',
-              }}
-            />
-          </CardMedia>
-          <CardContent sx={{ flex: 1 }}>
-            <Typography variant="body2" fontWeight={600} sx={{ mb: 0.5 }}>
-              {pub.title}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                mb: 1.5,
+                height: 110,
+                backgroundColor: 'grey.100',
+                backgroundImage: pub.imageUrl ? `url(${pub.imageUrl})` : undefined,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                position: 'relative',
               }}
             >
-              {pub.description}
-            </Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1.5,
-                pt: 1,
-                borderTop: '1px solid',
-                borderColor: 'divider',
-              }}
-            >
-              <StatBadge
-                icon={<ThumbUpOutlined sx={{ fontSize: 13, color: 'text.secondary' }} />}
-                count={pub.likesCount}
+              <Chip
+                label={pub.authorName}
+                size="small"
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  left: 8,
+                  bgcolor: 'rgba(255,255,255,0.92)',
+                  backdropFilter: 'blur(4px)',
+                  fontWeight: 600,
+                  fontSize: '0.625rem',
+                  height: 22,
+                }}
               />
-              <StatBadge
-                icon={<FavoriteBorder sx={{ fontSize: 13, color: 'error.light' }} />}
-                count={pub.heartsCount}
-              />
-              <StatBadge
-                icon={<VisibilityOutlined sx={{ fontSize: 13, color: 'text.secondary' }} />}
-                count={pub.viewsCount}
-              />
-              <StatBadge
-                icon={<ChatBubbleOutline sx={{ fontSize: 13, color: 'text.secondary' }} />}
-                count={pub.commentsCount}
-              />
-            </Box>
-          </CardContent>
-        </Card>
-      ))}
-    </Box>
-  </Box>
+            </CardMedia>
+            <CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 } }}>
+              <Typography variant="body2" fontWeight={600} sx={{ mb: 0.25, fontSize: '0.8125rem' }}>
+                {pub.title}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  mb: 1,
+                  fontSize: '0.7rem',
+                }}
+              >
+                {pub.description}
+              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1.5,
+                  pt: 0.75,
+                  borderTop: '1px solid',
+                  borderColor: 'divider',
+                }}
+              >
+                <StatBadge
+                  icon={<ThumbUpOutlined sx={{ fontSize: 12, color: 'text.secondary' }} />}
+                  count={pub.likesCount}
+                />
+                <StatBadge
+                  icon={<FavoriteBorder sx={{ fontSize: 12, color: 'error.light' }} />}
+                  count={pub.heartsCount}
+                />
+                <StatBadge
+                  icon={<VisibilityOutlined sx={{ fontSize: 12, color: 'text.secondary' }} />}
+                  count={pub.viewsCount}
+                />
+                <StatBadge
+                  icon={<ChatBubbleOutline sx={{ fontSize: 12, color: 'text.secondary' }} />}
+                  count={pub.commentsCount}
+                />
+              </Box>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
+    </CardContent>
+  </Card>
 ));
 
 LiveWidget.displayName = 'LiveWidget';

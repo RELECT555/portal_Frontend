@@ -13,8 +13,15 @@ interface Props {
 }
 
 export const VacanciesWidget: React.FC<Props> = React.memo(({ vacancies }) => (
-  <Card sx={{ borderLeft: (theme) => `3px solid ${theme.palette.primary.main}` }}>
-    <CardContent>
+  <Card
+    sx={{
+      height: '100%',
+      boxShadow: 'none',
+      border: '1px solid rgba(0,0,0,0.06)',
+      borderLeft: (theme) => `3px solid ${theme.palette.primary.main}`,
+    }}
+  >
+    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
       <SectionHeader
         title="Вакансии"
         linkTo={ROUTES.VACANCIES}
@@ -89,7 +96,7 @@ export const VacanciesWidget: React.FC<Props> = React.memo(({ vacancies }) => (
           ))}
         </Box>
       )}
-      <Box sx={{ mt: 2, pt: 1.5, borderTop: '1px solid', borderColor: 'divider' }}>
+      <Box sx={{ mt: 1, pt: 1, borderTop: '1px solid', borderColor: 'divider' }}>
         <Button
           component={Link}
           to={ROUTES.VACANCIES}

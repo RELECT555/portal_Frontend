@@ -8,6 +8,8 @@ import {
   AddRounded,
 } from '@mui/icons-material';
 import classnames from 'classnames';
+import { Breadcrumbs } from '@/components/shared';
+import { ROUTES } from '@/lib/constants';
 import { VacancyCard } from './components/VacancyCard';
 import { VacancyDetailPanel } from './components/VacancyDetailPanel';
 import { VacancyEditor } from './components/VacancyEditor';
@@ -222,6 +224,7 @@ const VacanciesPage: React.FC = () => {
 
   return (
     <div className={styles.page}>
+      <Breadcrumbs items={[{ label: 'Компания', to: ROUTES.COMPANY }, { label: 'Вакансии' }]} />
       {/* Hero */}
       <div className={styles.hero}>
         <Box

@@ -1,13 +1,22 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import { ArticleRounded } from '@mui/icons-material';
 import { useDebounce } from '@/hooks';
+import { Breadcrumbs, PageHero, FilterToolbar, EmptyState } from '@/components/shared';
+import { ROUTES } from '@/lib/constants';
 import { NewsCard } from './components/NewsCard';
-import { HeroSection } from './components/HeroSection';
-import { NewsToolbar } from './components/NewsToolbar';
 import { FeaturedSection } from './components/FeaturedSection';
-import { NewsEmptyState } from './components/NewsEmptyState';
 import { MOCK_NEWS_ITEMS, NEWS_STATS } from './mockData';
 import type { NewsCategory, SortOption } from './types';
+import { NEWS_CATEGORY_LABELS, SORT_LABELS, SORT_OPTIONS, CATEGORY_TABS } from './types';
 import styles from './NewsPage.module.scss';
+
+const ACCENT = '#0d9488';
+
+const HERO_STATS = [
+  { value: NEWS_STATS.totalNews, label: 'новостей' },
+  { value: NEWS_STATS.thisMonth, label: 'за месяц' },
+  { value: NEWS_STATS.totalAuthors, label: 'авторов' },
+];
 
 const NewsPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<NewsCategory>('all');
@@ -15,16 +24,16 @@ const NewsPage: React.FC = () => {
   const debouncedSearch = useDebounce(searchQuery);
   const [sortBy, setSortBy] = useState<SortOption>('recent');
 
-  const handleCategoryChange = useCallback((cat: NewsCategory): void => {
-    setActiveCategory(cat);
+  const handleCategoryChange = useCallback((cat: string): void => {
+    setActiveCategory(cat as NewsCategory);
   }, []);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchQuery(e.target.value);
   }, []);
 
-  const handleSortChange = useCallback((option: SortOption): void => {
-    setSortBy(option);
+  const handleSortChange = useCallback((option: string): void => {
+    setSortBy(option as SortOption);
   }, []);
 
   const filteredNews = useMemo(() => {
@@ -81,16 +90,33 @@ const NewsPage: React.FC = () => {
   const showFeatured = Boolean(mainNews) && activeCategory === 'all' && !debouncedSearch.trim();
 
   return (
-    <div className={styles.page}>
-      <HeroSection stats={NEWS_STATS} />
+    <div
+      className={styles.page}
+      style={{ '--accent': ACCENT, '--accent-rgb': '13, 148, 136' } as React.CSSProperties}
+    >
+      <Breadcrumbs items={[{ label: 'Компания', to: ROUTES.COMPANY }, { label: 'Новости' }]} />
 
-      <NewsToolbar
+      <PageHero
+        title="Новости"
+        subtitle="Последние события, анонсы и важные объявления компании"
+        stats={HERO_STATS}
+      />
+
+      <FilterToolbar
         activeCategory={activeCategory}
         sortBy={sortBy}
         searchQuery={searchQuery}
+        searchPlaceholder="Поиск новости..."
+        categoryLabel="Категория"
+        categoryTabs={CATEGORY_TABS as string[]}
+        categoryLabels={NEWS_CATEGORY_LABELS}
+        sortOptions={SORT_OPTIONS as [string, string][]}
+        sortLabels={SORT_LABELS}
+        defaultSort="recent"
         onCategoryChange={handleCategoryChange}
         onSortChange={handleSortChange}
         onSearchChange={handleSearchChange}
+        accentColor={ACCENT}
       />
 
       {showFeatured && mainNews && (
@@ -104,7 +130,10 @@ const NewsPage: React.FC = () => {
           ))}
         </div>
       ) : (
-        <NewsEmptyState />
+        <EmptyState
+          icon={<ArticleRounded sx={{ fontSize: 24, color: ACCENT, opacity: 0.4 }} />}
+          title="Новости не найдены"
+        />
       )}
     </div>
   );

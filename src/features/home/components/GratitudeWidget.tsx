@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '@/lib/constants';
 import type { GratitudeEntry } from '@/features/gratitude/types';
 
-const VISIBLE_COUNT = 5;
+const VISIBLE_COUNT = 3;
 
 interface Props {
   entries: GratitudeEntry[];
@@ -220,8 +220,7 @@ export const GratitudeWidget: React.FC<Props> = React.memo(({ entries }) => {
         sx={{
           pt: 1,
           pb: '12px !important',
-          px: 2.5,
-          flex: 1,
+          px: 2,
           display: 'flex',
           flexDirection: 'column',
         }}

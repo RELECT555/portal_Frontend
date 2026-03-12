@@ -1,14 +1,21 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Box, Typography } from '@mui/material';
-import { alpha } from '@mui/material/styles';
 import { CampaignRounded } from '@mui/icons-material';
 import { useDebounce } from '@/hooks';
+import { Breadcrumbs, PageHero, FilterToolbar, EmptyState } from '@/components/shared';
+import { ROUTES } from '@/lib/constants';
 import { LivePublicationCard } from './components/LivePublicationCard';
-import { HeroSection } from './components/HeroSection';
-import { LiveToolbar } from './components/LiveToolbar';
 import { MOCK_LIVE_PUBLICATIONS, LIVE_STATS } from './mockData';
 import type { LiveCategory, SortOption } from './types';
+import { LIVE_CATEGORY_LABELS, SORT_LABELS, SORT_OPTIONS, CATEGORY_TABS } from './types';
 import styles from './LivePage.module.scss';
+
+const ACCENT = '#ec4899';
+
+const HERO_STATS = [
+  { value: LIVE_STATS.totalPublications, label: 'публикаций' },
+  { value: LIVE_STATS.thisMonth, label: 'за месяц' },
+  { value: LIVE_STATS.totalAuthors, label: 'авторов' },
+];
 
 const LivePage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<LiveCategory>('all');
@@ -16,16 +23,16 @@ const LivePage: React.FC = () => {
   const debouncedSearch = useDebounce(searchQuery);
   const [sortBy, setSortBy] = useState<SortOption>('recent');
 
-  const handleCategoryChange = useCallback((cat: LiveCategory): void => {
-    setActiveCategory(cat);
+  const handleCategoryChange = useCallback((cat: string): void => {
+    setActiveCategory(cat as LiveCategory);
   }, []);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchQuery(e.target.value);
   }, []);
 
-  const handleSortChange = useCallback((option: SortOption): void => {
-    setSortBy(option);
+  const handleSortChange = useCallback((option: string): void => {
+    setSortBy(option as SortOption);
   }, []);
 
   const filteredPublications = useMemo(() => {
@@ -67,16 +74,35 @@ const LivePage: React.FC = () => {
   }, [activeCategory, debouncedSearch, sortBy]);
 
   return (
-    <div className={styles.page}>
-      <HeroSection stats={LIVE_STATS} />
+    <div
+      className={styles.page}
+      style={{ '--accent': ACCENT, '--accent-rgb': '236, 72, 153' } as React.CSSProperties}
+    >
+      <Breadcrumbs
+        items={[{ label: 'Корпоративная культура', to: ROUTES.CULTURE }, { label: 'Лайв' }]}
+      />
 
-      <LiveToolbar
+      <PageHero
+        title="Лайв"
+        subtitle="Жизнь компании глазами сотрудников — события, спорт и творчество"
+        stats={HERO_STATS}
+      />
+
+      <FilterToolbar
         activeCategory={activeCategory}
         sortBy={sortBy}
         searchQuery={searchQuery}
+        searchPlaceholder="Поиск публикации..."
+        categoryLabel="Категория"
+        categoryTabs={CATEGORY_TABS as string[]}
+        categoryLabels={LIVE_CATEGORY_LABELS}
+        sortOptions={SORT_OPTIONS as [string, string][]}
+        sortLabels={SORT_LABELS}
+        defaultSort="recent"
         onCategoryChange={handleCategoryChange}
         onSortChange={handleSortChange}
         onSearchChange={handleSearchChange}
+        accentColor={ACCENT}
       />
 
       {filteredPublications.length > 0 ? (
@@ -86,22 +112,10 @@ const LivePage: React.FC = () => {
           ))}
         </div>
       ) : (
-        <div className={styles.emptyState}>
-          <Box
-            className={styles.emptyIcon}
-            sx={{
-              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.06),
-            }}
-          >
-            <CampaignRounded sx={{ fontSize: 28, color: 'primary.main', opacity: 0.7 }} />
-          </Box>
-          <Typography variant="h4" fontWeight={600}>
-            Публикации не найдены
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 360 }}>
-            Попробуйте изменить фильтры или поисковый запрос
-          </Typography>
-        </div>
+        <EmptyState
+          icon={<CampaignRounded sx={{ fontSize: 24, color: ACCENT, opacity: 0.4 }} />}
+          title="Публикации не найдены"
+        />
       )}
     </div>
   );

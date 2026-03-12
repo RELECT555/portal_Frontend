@@ -8,6 +8,7 @@ export const MOCK_BOOKS: LibraryBook[] = [
     description:
       'Нобелевский лауреат показывает, как два типа мышления — быстрое и медленное — определяют наши суждения, решения и поступки. Обязательна к прочтению для всех, кто принимает решения.',
     category: 'psychology',
+    project: 'analytics',
     rating: 4.8,
     reviewsCount: 42,
     borrowCount: 156,

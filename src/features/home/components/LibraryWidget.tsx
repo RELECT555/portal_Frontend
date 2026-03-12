@@ -12,8 +12,8 @@ interface Props {
 const BOOK_COLORS = ['#f1f5f9', '#e2e8f0', '#f8fafc', '#eef2f7'];
 
 export const LibraryWidget: React.FC<Props> = React.memo(({ books }) => (
-  <Card>
-    <CardContent>
+  <Card sx={{ height: '100%', boxShadow: 'none', border: '1px solid rgba(0,0,0,0.06)' }}>
+    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
       <SectionHeader
         title="Корпоративная библиотека"
         linkText="Все книги"
